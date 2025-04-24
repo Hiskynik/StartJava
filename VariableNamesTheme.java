@@ -19,7 +19,7 @@ int sumNumbers = 15 + 50;
 System.out.println("Сумма чисел = " + sumNumbers);
 
 // Произведение цифр
-int productNumbers = 5 * 7;
+int productNumbers = 5 * 9;
 System.out.println("Произведение цифр = " + productNumbers);
 
 // Максимальное число
