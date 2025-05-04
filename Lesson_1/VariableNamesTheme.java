@@ -77,8 +77,8 @@ public class VariableNamesTheme {
         System.out.println("Максимальная длина = " + maxLength);
         
         // Пункт меню
-        String itemMenu = "это отдельная команда или параметр в меню или подменю";
-        System.out.println("Пункт меню - " + itemMenu);
+        String menuItem = "это отдельная команда или параметр в меню или подменю";
+        System.out.println("Пункт меню - " + menuItem);
 
         // Стоимость кофе
         int coffeePrice = 300;
@@ -124,8 +124,8 @@ public class VariableNamesTheme {
         System.out.println("\n2.BOOLEAN-ПЕРЕМЕННЫЕ\n");
 
         // сотни равны?
-        boolean hundredsEqual = true;
-        System.out.println("сотни равны? - " + hundredsEqual);
+        boolean isEqualHundreds = true;
+        System.out.println("сотни равны? - " + isEqualHundreds);
 
         // компьютер включен?
         boolean isComputerOn = true;
@@ -136,24 +136,24 @@ public class VariableNamesTheme {
         System.out.println("есть равные цифры? - " + hasEqualDigits);
 
         // служба создана?
-        boolean isServiceCreated = false;
-        System.out.println("служба создана? - " + hasCreatеService);
+        boolean isCreatedService = false;
+        System.out.println("служба создана? - " + isCreatedService);
 
         // файл пустой?
         boolean isEmptyFile = true;
         System.out.println("файл пустой? - " + isEmptyFile);
 
         // соединение активное?
-        boolean isConnectionActive = false;
-        System.out.println("соединение активное? - " + isConnectionActive);
+        boolean isActiveConnection = false;
+        System.out.println("соединение активное? - " + isActiveConnection);
 
         // новый?
         boolean isNew = false;
         System.out.println("новый? - " + isNew);
 
         // электронная почта действительная?
-        boolean isEmailValid = true;
-        System.out.println("электронная почта действительная? - " + isEmailValid);
+        boolean isValidEmail = true;
+        System.out.println("электронная почта действительная? - " + isValidEmail);
 
         // имеются уникальные строки?
         boolean hasUniqueStrings = false;
