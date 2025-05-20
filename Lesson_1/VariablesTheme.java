@@ -1,10 +1,13 @@
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class VariablesTheme {
     public static void main(String[] args) {
-        final long startNs = System.nanoTime();
+        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+        final LocalTime startTime = LocalTime.now();
+        final long startNanoTime = System.nanoTime();
 
         System.out.println("\n1.ВЫВОД ASCII-ГРАФИКИ\n");
 
@@ -15,12 +18,13 @@ public class VariablesTheme {
                 "J  J  aaaaa  V V  /      \\\n" +
                 " JJ  a     a  V  /___/\\___\\"
         );
-        System.out.println("""
-               /\\            
-         J    /  \\  v     v  a
-         J   /_( )\\  v   v  a a
-      J  J  /      \\  V V  aaaaa
-       JJ  /___/\\___\\  V  a     a""");
+        System.out.printf("""
+                 /\\            
+           J    /  \\  v     v  a
+           J   /_( )\\  v   v  a a
+        J  J  /      \\  V V  aaaaa
+         JJ  /___/\\___\\  V  a     a
+                """);
 
         System.out.println("\n2.РАСЧЕТ СТОИМОСТИ ТОВАРА\n");
         System.out.println("Первый способ:\n");
@@ -49,7 +53,7 @@ public class VariablesTheme {
 
         var discountBd = totalPriceBd
                 .multiply(discountSizeBd)
-                .divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
         System.out.println("сумма скидки = " + discountBd);
 
         var discountPriceBd = totalPriceBd.subtract(discountBd);
@@ -59,27 +63,27 @@ public class VariablesTheme {
 
         int cell1 = 2;
         int cell2 = 5;
-        System.out.println("Исходные значения переменных: ячейка 1 = " + cell1 + ", ячейка 2 = " + cell2);
+        System.out.println("Исходные значения переменных: A1 = " + cell1 + ", A2 = " + cell2);
         System.out.println("\nМетод: использование третьей переменной");
 
-        int cell3 = cell1;
+        int tmp = cell1;
         cell1 = cell2;
-        cell2 = cell3;
+        cell2 = tmp;
 
-        System.out.println("Результат: ячейка 1 = " + cell1 + ", ячейка 2 = " + cell2);
+        System.out.println("Результат: A1 = " + cell1 + ", A2 = " + cell2);
 
         System.out.println("\nМетод: применение арифметических операций");
         cell1 += cell2;
         cell2 = cell1 - cell2;
         cell1 -= cell2;
 
-        System.out.println("Результат: ячейка 1 = " + cell1 + ", ячейка 2 = " + cell2);
+        System.out.println("Результат: A1 = " + cell1 + ", A2 = " + cell2);
 
         System.out.println("\nМетод: побитовый");
         cell1 ^= cell2;
-        cell2 = cell1 ^ cell2;
+        cell2 ^= cell1;
         cell1 ^= cell2;
-        System.out.println("Результат: ячейка 1 = " + cell1 + ", ячейка 2 = " + cell2);
+        System.out.println("Результат: A1 = " + cell1 + ", A2 = " + cell2);
 
         System.out.println("\n4.ДЕКОДИРОВАНИЕ СООБЩЕНИЯ\n");
         
@@ -158,19 +162,14 @@ public class VariablesTheme {
 
         System.out.println("\n7.ВЫВОД ПАРАМЕТРОВ JVM И ОС\n");
 
-        final float BytesToMb = 1024f * 1024f;
+        final float toMb = 1024 * 1024;
         final Runtime runtime = Runtime.getRuntime();
 
         int availableProcessors = runtime.availableProcessors();
-        float maxMemoryMb = runtime.maxMemory() / BytesToMb;
-        float totalMemoryMb = runtime.totalMemory() / BytesToMb;
-        float freeMemoryMb = runtime.freeMemory() / BytesToMb;
+        float maxMemoryMb = runtime.maxMemory() / toMb;
+        float totalMemoryMb = runtime.totalMemory() / toMb;
+        float freeMemoryMb = runtime.freeMemory() / toMb;
         float usedMemoryMb = totalMemoryMb - freeMemoryMb;
-
-        char osDrive = System.getProperty("user.home").charAt(0);
-        char pathSeparator = System.getProperty("file.separator").charAt(0);
-        String osVersion = System.getProperty("os.version");
-        String javaVersion = System.getProperty("java.version");
 
         System.out.printf("""
             Доступное число ядер: %d
@@ -180,6 +179,11 @@ public class VariablesTheme {
             Используемая память: %.1f
             Свободная память: %.1f
                 """, availableProcessors, maxMemoryMb, totalMemoryMb, usedMemoryMb, freeMemoryMb);
+
+        char osDrive = System.getProperty("user.home").charAt(0);
+        char pathSeparator = System.getProperty("file.separator").charAt(0);
+        String osVersion = System.getProperty("os.version");
+        String javaVersion = System.getProperty("java.version");
 
         System.out.println("""
             Описание и значения характеристик:
@@ -191,13 +195,11 @@ public class VariablesTheme {
 
         System.out.println("\n8.ЗАМЕР ВРЕМЕНИ РАБОТЫ КОДА\n");
 
-        LocalTime start = LocalTime.now();
-        System.out.printf("Старт проверки: %tT.%3$03d%n", start, 0, start.getNano() / 1_000_000);
-
-        long timeNs = System.nanoTime() - startNs;
-
-        LocalTime end = LocalTime.now();
-        System.out.printf("Финиш проверки: %tT.%3$03d%n", end, 0, end.getNano() / 1_000_000);
-        System.out.printf("Время работы:   %.3f сек%n", timeNs / 1_000_000_000.0);
+        System.out.println("Старт проверки: " + dtf.format(startTime));
+        long endNanoTime = System.nanoTime();
+        double elapsedSeconds = (endNanoTime - startNanoTime) / 1_000_000_000.0;
+        LocalTime endTime = LocalTime.now();
+        System.out.println("Финиш проверки: " + dtf.format(endTime));
+        System.out.printf("Время работы:   %.3f сек%n", elapsedSeconds);
     }
 }
