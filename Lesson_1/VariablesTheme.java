@@ -5,25 +5,24 @@ import java.time.format.DateTimeFormatter;
 
 public class VariablesTheme {
     public static void main(String[] args) {
-        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         final LocalTime startTime = LocalTime.now();
         final long startNanoTime = System.nanoTime();
 
         System.out.println("\n1.ВЫВОД ASCII-ГРАФИКИ\n");
 
         System.out.println(
-                "                     /\\\n" +
-                "   J    a  v     v  /  \\\n" +
-                "   J   a a  v   v  /_( )\\\n" +
-                "J  J  aaaaa  V V  /      \\\n" +
-                " JJ  a     a  V  /___/\\___\\"
+                "                             /\\\n" +
+                "           J    a  v     v  /  \\\n" +
+                "           J   a a  v   v  /_( )\\\n" +
+                "        J  J  aaaaa  V V  /      \\\n" +
+                "         JJ  a     a  V  /___/\\___\\"
         );
         System.out.printf("""
-                 /\\            
-           J    /  \\  v     v  a
-           J   /_( )\\  v   v  a a
-        J  J  /      \\  V V  aaaaa
-         JJ  /___/\\___\\  V  a     a
+                                 /\\            
+                           J    /  \\  v     v  a
+                           J   /_( )\\  v   v  a a
+                        J  J  /      \\  V V  aaaaa
+                         JJ  /___/\\___\\  V  a     a
                 """);
 
         System.out.println("\n2.РАСЧЕТ СТОИМОСТИ ТОВАРА\n");
@@ -195,9 +194,10 @@ public class VariablesTheme {
 
         System.out.println("\n8.ЗАМЕР ВРЕМЕНИ РАБОТЫ КОДА\n");
 
+        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         System.out.println("Старт проверки: " + dtf.format(startTime));
         long endNanoTime = System.nanoTime();
-        double elapsedSeconds = (endNanoTime - startNanoTime) / 1_000_000_000.0;
+        double elapsedSeconds = (endNanoTime - startNanoTime) / 1e9;
         LocalTime endTime = LocalTime.now();
         System.out.println("Финиш проверки: " + dtf.format(endTime));
         System.out.printf("Время работы:   %.3f сек%n", elapsedSeconds);
