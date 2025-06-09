@@ -204,7 +204,7 @@ public class IfElseStatementTheme {
 
         System.out.print(result1);
 
-        System.out.println("\n7.РАСЧЕТ ГОДОВОЙ ПРИБЫЛИ\n");
+        System.out.println("\n8.РАСЧЕТ ГОДОВОЙ ПРИБЫЛИ\n");
 
         BigDecimal monthlyRevenue = new BigDecimal("13025.233");
         BigDecimal monthlyRent = new BigDecimal("5123.018");
