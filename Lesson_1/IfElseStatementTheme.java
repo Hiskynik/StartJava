@@ -210,7 +210,6 @@ public class IfElseStatementTheme {
         BigDecimal monthlyRent = new BigDecimal("5123.018");
         BigDecimal monthlyCost = new BigDecimal("9001.729");
         
-        // Вычисляем ежемесячную прибыль
         BigDecimal monthlyProfit = monthlyRevenue
                 .subtract(monthlyRent)
                 .subtract(monthlyCost);
