@@ -210,7 +210,7 @@ public class IfElseStatementTheme {
         String sign = "";
         if (yearlyProfit.compareTo(BigDecimal.ZERO) > 0) {
             sign = "+";
-        } else if (yearlyProfit.compareTo(BigDecimal.ZERO) < 0) {
+        } else {
             sign = "-";
             formattedProfit = formattedProfit.substring(1);
         }
