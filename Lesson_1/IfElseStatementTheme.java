@@ -16,7 +16,6 @@ public class IfElseStatementTheme {
         }
 
         int age = 18;
-        boolean isAdult = true == age > 18;
         if (age > 18) {
             System.out.println("Контент доступен для пользователей, достигших возраста " + age + " лет");
         } else {
@@ -24,7 +23,6 @@ public class IfElseStatementTheme {
         }
 
         float height = 1.8f;
-        boolean isTall = false == height < 1.8;
         if (height < 1.8) {
             System.out.println("Неподходящий рост для данного аттракциона");
         } else {
@@ -35,10 +33,14 @@ public class IfElseStatementTheme {
 
         int stepsYesterday = 7252;
         int stepsToday = 10200;
-        int stepsSum = stepsYesterday + stepsToday;
-        double averageStepsCount = stepsSum / 2;
+        double averageSteps = (stepsYesterday + stepsToday) / 2;
 
-        System.out.println("Количество шагов за вчера и сегодня: " + stepsSum);
+        String stepsCount = String.format("""
+                    Количество шагов за вчера и сегодня:
+                    Вчера: %d
+                    Сегодня: %d
+                    """, stepsYesterday, stepsToday);
+        System.out.printf(stepsCount);
         if (stepsYesterday > stepsToday) {
             System.out.println("Вчера было больше шагов");
         } else if (stepsYesterday < stepsToday) {
@@ -46,66 +48,60 @@ public class IfElseStatementTheme {
         } else {
             System.out.println("Равное количество шагов");
         }
-        System.out.println("Среднее значение шагов: " + averageStepsCount);
+        System.out.println("Среднее значение шагов: " + averageSteps);
 
         System.out.println("\n3.ПРОВЕРКА КОЛИЧЕСТВА ГОСТЕЙ\n");
         
-        int guestCount = 11;
-        if (guestCount > 0) {
-            if (guestCount % 2 == 1) {
-                System.out.printf("Записалось %d гостей. Нужны индивидуальные задания. %n", guestCount);
-            }
-        } 
-        if (guestCount > 0) {
-            if (guestCount % 2 == 0) {
-                System.out.printf("Записалось %d гостей." + 
-                        "Можно формировать пары для конкурсов. %n", guestCount);
-            }
+        int guestCount = -10;
+        if (guestCount < 0) {
+            System.out.println("ошибка");
         } else if (guestCount == 0) {
             System.out.println("Пока никто не записался на мероприятие!");
-        } else if (guestCount < 0) {
-            System.out.println("ошибка");
+        } else if (guestCount % 2 == 1) {
+            System.out.printf("Записалось %d гостей. Нужны индивидуальные задания. %n", guestCount);
+        } else {
+            System.out.printf("Записалось %d гостей. Можно формировать пары для конкурсов. %n", guestCount);
         }
-
         System.out.println("\n4.ОПРЕДЕЛЕНИЕ ПЕРВОГО СИМВОЛА НИКНЕЙМА\n");
 
         String nickname = "777Striker777";
         char firstChar = nickname.charAt(0);
+        String text = "Имя %s начинается с ";
         
         if (firstChar >= 'a' && firstChar <= 'z') {
-            System.out.printf("Имя %s начинается с маленькой буквы '%c'%n", nickname, firstChar);
+            System.out.printf(text + "маленькой буквы '%c'", nickname, firstChar);
         } else if (firstChar >= 'A' && firstChar <= 'Z') {
-            System.out.printf("Имя %s начинается с большой буквы '%c'%n", nickname, firstChar);
+            System.out.printf(text + "большой буквы '%c'", nickname, firstChar);
         } else if (firstChar >= '0' && firstChar <= '9') {
-            System.out.printf("Имя %s начинается с цифры '%c'%n", nickname, firstChar);
+            System.out.printf(text + "цифры '%c'%n", nickname, firstChar);
         } else {
-            System.out.printf("Имя %s начинается с символа '%c'%n", nickname, firstChar);
+            System.out.printf(text + "символа '%c'", nickname, firstChar);
         }
 
         if (Character.isLowerCase(firstChar)) {
-            System.out.printf("Имя %s начинается с маленькой буквы '%c'%n", nickname, firstChar);
+            System.out.printf(text + "маленькой буквы '%c'", nickname, firstChar);
         } else if (Character.isUpperCase(firstChar)) {
-            System.out.printf("Имя %s начинается с большой буквы '%c'%n", nickname, firstChar);
+            System.out.printf(text + "большой буквы '%c'", nickname, firstChar);
         } else if (Character.isDigit(firstChar)) {
-            System.out.printf("Имя %s начинается с цифры '%c'%n", nickname, firstChar);
+            System.out.printf(text + "цифры '%c'%n", nickname, firstChar);
         } else {
-            System.out.printf("Имя %s начинается с символа '%c'%n", nickname, firstChar);
+            System.out.printf(text + "символа '%c'", nickname, firstChar);
         }
 
-        System.out.println("\n5.ИНВЕНТАРИЗАЦИЯ\n");
+        System.out.println("\n5.ИНВЕНТАРИЗАЦИЯ\n"); 
 
-        int serialNumberDb = 233;
-        int computerNumber = 133;
-        String message = (serialNumberDb == computerNumber) ?
-                String.format("[№%d]: компьютер на 3-м этаже в кабинете 2", serialNumberDb)
-                : (serialNumberDb % 100 == computerNumber % 100) ?
-                String.format("""
-                    Нет полного совпадения:
-                    База данных: [№%d]
-                    Фактический: [№_%d]
-                    """, serialNumberDb, computerNumber % 100)
-                : String.format("[№%d]: оборудование не идентифицировано", serialNumberDb);
-        System.out.printf(message);
+        int serialNumberDb = 232;
+        int computerNumber = 232;
+        String locationTemplate = "[№%d]: компьютер на %d-м этаже в кабинете %d";
+        System.out.printf(serialNumberDb == computerNumber ? 
+                locationTemplate.formatted(serialNumberDb, serialNumberDb % 10, (serialNumberDb / 10) % 10)
+                : serialNumberDb % 100 == computerNumber % 100 ?
+                """
+                Нет полного совпадения:
+                База данных: [№%d]
+                Фактический: [№_%d]
+                """.formatted(serialNumberDb, computerNumber % 100)
+                : "[№%d]: оборудование не идентифицировано".formatted(serialNumberDb));
 
         System.out.println("\n6.ПОДСЧЕТ НАЧИСЛЕННЫХ БАНКОМ %\n");
         System.out.println("Первый способ:\n");
@@ -114,31 +110,26 @@ public class IfElseStatementTheme {
         int depositSum1 = 100_000;
         int depositSum2 = 300_000;
         int daysInYear = 365;
-        float rate;
+        float rate = 10.0f;
         if (bankDeposit < depositSum1) {
             rate = 5.0f;
         } else if (bankDeposit >= depositSum1 && bankDeposit <= depositSum2) {
             rate = 7.0f;
-        } else if (bankDeposit > depositSum2) {
-            rate = 10.0f;
-        } else {
-            rate = 0.0f;
         }
         float interest = (bankDeposit * rate * daysInYear) / (daysInYear * 100);
         float totalAmount = bankDeposit + interest;
-        String result = String.format("""
+        System.out.printf("""
                      Сумма вклада: %.2f
                      Сумма начисленного процента: %.2f
                      Итоговая сумма с процентами: %.2f
                      """, bankDeposit, interest, totalAmount);
-        System.out.printf(result);
 
         System.out.println("\nВторой способ:\n");
 
         var bankDepositBd = new BigDecimal("321123.79");
-        var depositSum1Bd = new BigDecimal("100000");
-        var depositSum2Bd = new BigDecimal("300000");
-        var daysInYearBd = new BigDecimal("365");
+        var depositSum1Bd = BigDecimal.valueOf(100000);
+        var depositSum2Bd = BigDecimal.valueOf(300000);
+        var daysInYearBd = BigDecimal.valueOf(365);
         BigDecimal rateBd;
         if (bankDepositBd.compareTo(depositSum1Bd) < 0) {
             rateBd = new BigDecimal("0.05");
@@ -153,56 +144,49 @@ public class IfElseStatementTheme {
         var interestBd = (bankDepositBd
                 .multiply(rateBd)
                 .multiply(daysInYearBd)
-                .divide(daysInYearBd.multiply(new BigDecimal(100)
+                .divide(daysInYearBd.multiply(BigDecimal.valueOf(100)
                 .setScale(2, RoundingMode.HALF_UP))));
         var totalAmountBd = bankDepositBd
                 .add(interestBd)
                 .setScale(2, RoundingMode.HALF_UP);
-        String resultBd = String.format("""
+        System.out.printf("""
                      Сумма вклада: %.2f
                      Сумма начисленного процента: %.2f
                      Итоговая сумма с процентами: %.2f
                      """, bankDeposit, interest, totalAmount);
-        System.out.printf(resultBd);
 
         System.out.println("\n7.ОПРЕДЕЛЕНИЕ ОЦЕНКИ ПО ПРЕДМЕТАМ\n");
 
-        int history = 59;
-        int historyGrade;
-        if (history > 91) {
+        int historyPercent = 59;
+        int historyGrade = 2;
+        if (historyPercent > 91) {
             historyGrade = 5;
-        } else if (history > 70) {
+        } else if (historyPercent > 70) {
             historyGrade = 4;
-        } else if (history > 60) {
+        } else if (historyPercent > 60) {
             historyGrade = 3;
-        } else {
-            historyGrade = 2;
         }
 
-        int programming = 92;
-        int programmingGrade;
-        if (programming > 91) {
+        int programmingPercent = 92;
+        int programmingGrade = 2;
+        if (programmingPercent > 91) {
             programmingGrade = 5;
-        } else if (programming > 73) {
+        } else if (programmingPercent > 73) {
             programmingGrade = 4;
-        } else if (programming > 60) {
+        } else if (programmingPercent > 60) {
             programmingGrade = 3;
-        } else {
-            programmingGrade = 2;
         }
 
         float averageScore = (historyGrade + programmingGrade) / 2.0f;
-        float averagePercent = (history + programming) / 2.0f;
+        float averagePercent = (historyPercent + programmingPercent) / 2.0f;
 
-        String result1 = String.format("""
+        System.out.printf("""
                 История: %d (оценка: %d)
                 Программирование: %d (оценка: %d)
                 Средний балл оценок по предметам: %.2f
                 Средний %% по предметам: %.2f
-                """, history, historyGrade, programming, programmingGrade, averageScore, 
+                """, historyPercent, historyGrade, programmingPercent, programmingGrade, averageScore, +
                 averagePercent);
-
-        System.out.print(result1);
 
         System.out.println("\n8.РАСЧЕТ ГОДОВОЙ ПРИБЫЛИ\n");
 
@@ -230,7 +214,6 @@ public class IfElseStatementTheme {
             sign = "-";
             formattedProfit = formattedProfit.substring(1);
         }
-        
         System.out.println("Прибыль за год: " + sign + formattedProfit.replace(".", ",") + " руб.");
     }
 }
