@@ -198,7 +198,7 @@ public class IfElseStatementTheme {
                 .subtract(monthlyRent)
                 .subtract(monthlyCost);
         
-        BigDecimal yearlyProfit = monthlyProfit.multiply(new BigDecimal("12"));
+        BigDecimal yearlyProfit = monthlyProfit.multiply(BigDecimal.valueOf(12));
         
         yearlyProfit = yearlyProfit.setScale(2, RoundingMode.HALF_UP);
         
