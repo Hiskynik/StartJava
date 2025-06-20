@@ -17,7 +17,8 @@ public class IfElseStatementTheme {
 
         int age = 18;
         if (age > 18) {
-            System.out.println("Контент доступен для пользователей, достигших возраста " + age + " лет");
+            System.out.println("Контент доступен для пользователей, " +
+                    "достигших возраста " + age + " лет");
         } else {
             System.out.println("Контент недоступен");
         }
@@ -90,7 +91,7 @@ public class IfElseStatementTheme {
 
         System.out.println("\n5.ИНВЕНТАРИЗАЦИЯ\n");
         int serialNumberDb = 223;
-        int computerNumber = 111;
+        int computerNumber = 121;
 
         if (serialNumberDb == computerNumber) {
             System.out.printf("[№%d]: компьютер на 3-м этаже в кабинете 2%n", serialNumberDb);
@@ -103,21 +104,19 @@ public class IfElseStatementTheme {
             int ocDigit2 = (computerNumber / 10) % 10;
             int ocDigit3 = computerNumber % 10;
             
-            String match1 = (dbDigit1 == ocDigit1) ? String.valueOf(dbDigit1) : "_";
-            String match2 = (dbDigit2 == ocDigit2) ? String.valueOf(dbDigit2) : "_";
-            String match3 = (dbDigit3 == ocDigit3) ? String.valueOf(dbDigit3) : "_";
-
             boolean hasAnyMatch = dbDigit1 == ocDigit1 ||
                     dbDigit2 == ocDigit2 || dbDigit3 == ocDigit3;
             
             if (!hasAnyMatch) {
                 System.out.printf("[№%d]: оборудование не идентифицировано%n", serialNumberDb);
             } else {
-                // Вывод с использованием текстового блока для частичного совпадения
+                String match1 = (dbDigit1 == ocDigit1) ? String.valueOf(dbDigit1) : "_";
+                String match2 = (dbDigit2 == ocDigit2) ? String.valueOf(dbDigit2) : "_";
+                String match3 = (dbDigit3 == ocDigit3) ? String.valueOf(dbDigit3) : "_";
                 System.out.printf("""
-                    Нет полного совпадения:
-                    База данных: [№%d]
-                    Фактический: [№%s%s%s]
+                        Нет полного совпадения:
+                        База данных: [№%d]
+                        Фактический: [№%s%s%s]
                         """, serialNumberDb, match1, match2, match3);
             }
         }
@@ -137,10 +136,10 @@ public class IfElseStatementTheme {
         float interest = (bankDeposit * rate * daysInYear) / (daysInYear * 100);
         float totalAmount = bankDeposit + interest;
         System.out.printf("""
-                     Сумма вклада: %.2f
-                     Сумма начисленного процента: %.2f
-                     Итоговая сумма с процентами: %.2f
-                     """, bankDeposit, interest, totalAmount);
+                Сумма вклада: %.2f
+                Сумма начисленного процента: %.2f
+                Итоговая сумма с процентами: %.2f
+                """, bankDeposit, interest, totalAmount);
 
         System.out.println("\nВторой способ:\n");
 
@@ -164,10 +163,10 @@ public class IfElseStatementTheme {
                 .add(interestBd)
                 .setScale(2, RoundingMode.HALF_UP);
         System.out.printf("""
-                     Сумма вклада: %.2f
-                     Сумма начисленного процента: %.2f
-                     Итоговая сумма с процентами: %.2f
-                     """, bankDeposit, interest, totalAmount);
+                Сумма вклада: %.2f
+                Сумма начисленного процента: %.2f
+                Итоговая сумма с процентами: %.2f
+                """, bankDeposit, interest, totalAmount);
 
         System.out.println("\n7.ОПРЕДЕЛЕНИЕ ОЦЕНКИ ПО ПРЕДМЕТАМ\n");
 
@@ -200,8 +199,8 @@ public class IfElseStatementTheme {
                 Средний балл оценок по предметам: %.2f
                 Средний %% по предметам: %.2f
                 """, historyPercent, historyGrade, 
-                programmingPercent, 
-                programmingGrade, averageScore, averagePercent);
+                programmingPercent, programmingGrade, 
+                averageScore, averagePercent);
 
         System.out.println("\n8.РАСЧЕТ ГОДОВОЙ ПРИБЫЛИ\n");
 
@@ -209,25 +208,14 @@ public class IfElseStatementTheme {
         BigDecimal monthlyRent = new BigDecimal("5123.018");
         BigDecimal monthlyCost = new BigDecimal("9001.729");
         
-        BigDecimal monthlyProfit = monthlyRevenue
+        BigDecimal yearlyProfit = monthlyRevenue
                 .subtract(monthlyRent)
-                .subtract(monthlyCost);
+                .subtract(monthlyCost)
+                .multiply(BigDecimal.valueOf(12))
+                .setScale(2, RoundingMode.HALF_UP);
         
-        BigDecimal yearlyProfit = monthlyProfit.multiply(BigDecimal.valueOf(12));
-        
-        yearlyProfit = yearlyProfit.setScale(2, RoundingMode.HALF_UP);
-        
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
-        DecimalFormat df = new DecimalFormat("0.00", symbols);
-        String formattedProfit = df.format(yearlyProfit);
-        
-        String sign = "";
-        if (yearlyProfit.compareTo(BigDecimal.ZERO) > 0) {
-            sign = "+";
-        } else {
-            sign = "-";
-            formattedProfit = formattedProfit.substring(1);
-        }
-        System.out.println("Прибыль за год: " + sign + formattedProfit.replace(".", ",") + " руб.");
+        String sign = yearlyProfit.compareTo(BigDecimal.ZERO) > 0 ? "+" : "-";
+        String formattedProfit = String.format("%.2f", yearlyProfit.abs());
+        System.out.println("Прибыль за год: " + sign + formattedProfit + " руб.");
     }
 }
