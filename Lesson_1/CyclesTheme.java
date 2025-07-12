@@ -20,73 +20,40 @@ public class CyclesTheme {
         int stars = 5;
         int dashes = 10;
         int carets = 1;
-        
+
+        String dashesLine = "-".repeat(dashes);
         for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < dashes; j++) {
-                System.out.print("-");
-            }
-            System.out.print(" ");
+            System.out.print(dashesLine + " ");
 
             for (int j = 0; j < stars; j++) {
                 System.out.print("*");
             }
-            
+            stars--;
             System.out.print(" ");
-            
+
             for (int j = 0; j < carets; j++) {
                 System.out.print("^");
             }
-            System.out.println();
-            
-            stars--;
             carets += 2;
-        }
-
-        System.out.println("\n3.ВЫВОД ТАБЛИЦЫ УМНОЖЕНИЯ\n");
-
-        System.out.println("  |  2  3  4  5  6  7  8  9");
-        System.out.println("--+------------------------");
-        
-        for (int i = 2; i <= 9; i++) {
-            System.out.print(i + " |");
-            for (int j = 2; j <= 9; j++) {
-                System.out.printf("%3d", i * j);
-            }
             System.out.println();
         }
 
         System.out.println("\n4.ВЫВОД ЧИСЕЛ В НЕСКОЛЬКО СТРОК\n");
 
-        int start = 1;
-        int end = 24;
-        int numbersPerLine = 5;
-        int oddCount = 0;
-        for (int i = start; i < end; i++) {
-            if (i % 2 != 0) {
-                oddCount++;
+        int count = 0;
+        for (int i = 1; i < 24; i += 2) {
+            System.out.printf("%2d ", i);
+            count++;
+            if (count % 5 == 0) {
+                System.out.println();
             }
+        }
+        while (count % 5 != 0) {
+            System.out.printf("%2d ", 0);
+            count++;
         }
 
-        int numbersInCurrentLine = 0;
-        for (int i = start; i < end; i++) {
-            if (i % 2 != 0) {
-                System.out.printf("%2d ", i);
-                numbersInCurrentLine++;
-                
-                if (numbersInCurrentLine == numbersPerLine) {
-                    System.out.println();
-                    numbersInCurrentLine = 0;
-                }
-            }
-        }
-
-        if (numbersInCurrentLine > 0) {
-            for (int i = numbersInCurrentLine; i < numbersPerLine; i++) {
-                System.out.printf("%2d ", 0);
-            }
-            System.out.println();
-        }
-        System.out.println("\n5.ВЫВОД ЧИСЕЛ МЕЖДУ MIN И MAX\n");
+        System.out.println("\n\n5.ВЫВОД ЧИСЕЛ МЕЖДУ MIN И MAX \n");
 
         int a = 3;
         int b = 5;
@@ -109,30 +76,23 @@ public class CyclesTheme {
                 System.out.print(", ");
             }
         }
-        System.out.println("\n6.РАЗНЫЕ ОПЕРАЦИИ НАД ЧИСЛОМ\n");
+        System.out.println("\n\n6.РАЗНЫЕ ОПЕРАЦИИ НАД ЧИСЛОМ \n");
 
         int number = 2234321;
-        int originalNumber = number;
-        
+        int currNumber = number;
         int reversedNumber = 0;
-        while (number != 0) {
+        int countOfTwos = 0;
+
+        while (number > 0) {
             int digit = number % 10;
             reversedNumber = reversedNumber * 10 + digit;
-            number = number / 10;
-        }
-        
-        boolean isPalindrome = originalNumber == reversedNumber;
-        
-        number = originalNumber;
-        int countOfTwos = 0;
-        while (number != 0) {
-            int digit = number % 10;
             if (digit == 2) {
                 countOfTwos++;
             }
-            number = number / 10;
+            number /= 10;
         }
-        
+        boolean isPalindrome = currNumber == reversedNumber;
+
         String evenOrOdd = (countOfTwos % 2 == 0) ? "четным" : "нечетным";
         
         System.out.println(reversedNumber + " - " + 
@@ -141,36 +101,34 @@ public class CyclesTheme {
 
         System.out.println("\n7.ПРОВЕРКА СЧАСТЛИВОГО ЧИСЛА\n");
 
-        int number1 = 101002;
-        String numStr = String.format("%06d", number1);
-
+        int originalNumber = 101002;
+        int tempNumber = originalNumber;
         int sumFirst = 0;
         int sumSecond = 0;
 
-        for (int i = 0; i < 3; i++) {
-            sumFirst += Character.getNumericValue(numStr.charAt(i));
-        }
-
-        for (int i = 3; i < 6; i++) {
-            sumSecond += Character.getNumericValue(numStr.charAt(i));
+        for (int i = 0; i < 6; i++) {
+            int digit = tempNumber % 10;
+            if (i < 3) {
+                sumSecond += digit;
+            } else {
+                sumFirst += digit;
+            }
+            tempNumber /= 10;
         }
 
         if (sumFirst == sumSecond) {
-            System.out.printf("%d - счастливое число%n", number1);
+            System.out.printf("%d - счастливое число%n", originalNumber);
         } else {
-            System.out.printf("%d - несчастливое число%n", number1);
+            System.out.printf("%d - несчастливое число%n", originalNumber);
         }
 
-        System.out.printf("Сумма цифр %03d = %d%n", 
-                Integer.parseInt(numStr.substring(3)), sumSecond);
-        System.out.printf("Сумма цифр %03d = %d%n",
-                Integer.parseInt(numStr.substring(0, 3)), sumFirst);
+        System.out.printf("Сумма первых трех цифр = %d%n", sumFirst);
+        System.out.printf("Сумма последних трех цифр = %d%n", sumSecond);
 
         System.out.println("\n8.ГЕНЕРАТОР ПАРОЛЯ\n");
-
         String password = generatePassword();
         String strength = checkPasswordStrength(password);
-        
+
         System.out.println("Пароль: " + password);
         System.out.println("Надежность: " + strength);
     }
@@ -180,45 +138,8 @@ public class CyclesTheme {
         String password = "";
 
         for (int i = 0; i < 8; i++) {
-            int choice = random.nextInt(4);
-
-            if (choice == 0) {
-                char digit = (char) random.nextInt(48, 58);
-                password += digit;
-            } else if (choice == 1) {
-                char upper = (char) random.nextInt(65, 91);
-                password += upper;
-            } else if (choice == 2) {
-                char lower = (char) random.nextInt(97, 123);
-                password += lower;
-            } else {
-                int rangeChoice = random.nextInt(4);
-                int start;
-                int end;
-                switch (rangeChoice) {
-                    case 0:
-                        start = 33;
-                        end = 48;
-                        break;
-                    case 1:
-                        start = 58;
-                        end = 65;
-                        break;
-                    case 2:
-                        start = 91;
-                        end = 97;
-                        break;
-                    default:
-                        start = 123;
-                        end = 127;
-                        break;
-                }
-                
-                char special = (char) random.nextInt(start, end);
-                password += special;
-            }
+            password += (char) random.nextInt(33, 127);
         }
-
         return password;
     }
 
@@ -226,7 +147,7 @@ public class CyclesTheme {
         if (password == null || password.isEmpty()) {
             return "Слабый";
         }
-    
+
         boolean hasLower = false;
         boolean hasUpper = false;
         boolean hasDigit = false;
@@ -234,7 +155,7 @@ public class CyclesTheme {
 
         for (int i = 0; i < password.length(); i++) {
             char c = password.charAt(i);
-        
+    
             if (Character.isLowerCase(c)) {
                 hasLower = true;
             } else if (Character.isUpperCase(c)) {
