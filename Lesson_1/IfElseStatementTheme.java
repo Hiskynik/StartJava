@@ -36,10 +36,10 @@ public class IfElseStatementTheme {
         int stepsToday = 10200;
 
         System.out.printf("""
-                    Количество шагов за вчера и сегодня:
-                    Вчера: %d
-                    Сегодня: %d
-                    """, stepsYesterday, stepsToday);
+                Количество шагов за вчера и сегодня:
+                Вчера: %d
+                Сегодня: %d
+                """, stepsYesterday, stepsToday);
         if (stepsYesterday > stepsToday) {
             System.out.println("Вчера было больше шагов");
         } else if (stepsYesterday < stepsToday) {
