@@ -78,18 +78,18 @@ public class CyclesTheme {
         }
         System.out.println("\n\n6.РАЗНЫЕ ОПЕРАЦИИ НАД ЧИСЛОМ \n");
 
-        int number = 2234321;
-        int currNumber = number;
+        int original = 2234321;
+        int currNumber = original;
         int reversedNumber = 0;
         int countOfTwos = 0;
 
-        while (number > 0) {
-            int digit = number % 10;
+        while (original > 0) {
+            int digit = original % 10;
             reversedNumber = reversedNumber * 10 + digit;
             if (digit == 2) {
                 countOfTwos++;
             }
-            number /= 10;
+            original /= 10;
         }
         boolean isPalindrome = currNumber == reversedNumber;
 
@@ -102,18 +102,18 @@ public class CyclesTheme {
         System.out.println("\n7.ПРОВЕРКА СЧАСТЛИВОГО ЧИСЛА\n");
 
         int originalNumber = 101002;
-        int tempNumber = originalNumber;
+        currNumber = originalNumber;
         int sumFirst = 0;
         int sumSecond = 0;
 
         for (int i = 0; i < 6; i++) {
-            int digit = tempNumber % 10;
+            int digit = currNumber % 10;
             if (i < 3) {
                 sumSecond += digit;
             } else {
                 sumFirst += digit;
             }
-            tempNumber /= 10;
+            currNumber /= 10;
         }
 
         if (sumFirst == sumSecond) {
@@ -126,53 +126,36 @@ public class CyclesTheme {
         System.out.printf("Сумма последних трех цифр = %d%n", sumSecond);
 
         System.out.println("\n8.ГЕНЕРАТОР ПАРОЛЯ\n");
-        String password = generatePassword();
-        String strength = checkPasswordStrength(password);
-
-        System.out.println("Пароль: " + password);
-        System.out.println("Надежность: " + strength);
-    }
-
-    public static String generatePassword() {
-        Random random = new Random();
         String password = "";
-
-        for (int i = 0; i < 8; i++) {
-            password += (char) random.nextInt(33, 127);
-        }
-        return password;
-    }
-
-    public static String checkPasswordStrength(String password) {
-        if (password == null || password.isEmpty()) {
-            return "Слабый";
-        }
-
         boolean hasLower = false;
         boolean hasUpper = false;
         boolean hasDigit = false;
         boolean hasSpecial = false;
+        Random random = new Random();
 
-        for (int i = 0; i < password.length(); i++) {
-            char c = password.charAt(i);
-    
-            if (Character.isLowerCase(c)) {
+        for (int i = 0; i < 8; i++) {
+            char symbol = (char) random.nextInt(33, 127);
+            password += symbol;
+            
+            if (Character.isLowerCase(symbol)) {
                 hasLower = true;
-            } else if (Character.isUpperCase(c)) {
+            } else if (Character.isUpperCase(symbol)) {
                 hasUpper = true;
-            } else if (Character.isDigit(c)) {
+            } else if (Character.isDigit(symbol)) {
                 hasDigit = true;
-            } else { 
-                hasSpecial = true;
-            }
+            } else hasSpecial = true;
         }
 
-        if (password.length() >= 8 && hasLower && hasUpper && hasDigit && hasSpecial) {
-            return "Надежный";
-        } else if (password.length() >= 8 && (hasLower || hasUpper) && hasDigit) {
-            return "Средний";
+        String strength;
+        if (hasLower && hasUpper && hasDigit && hasSpecial) {
+            strength = "Надежный";
+        } else if ((hasLower || hasUpper) && hasDigit) {
+            strength = "Средний";
         } else {
-            return "Слабый";
+            strength = "Слабый";
         }
+
+        System.out.println("Пароль: " + password);
+        System.out.println("Надежность: " + strength);
     }
 }
