@@ -3,21 +3,20 @@ public class GuessNumber {
         int secretNumber = 55;
         int low = 1;
         int high = 100;
-        int guess;
+        int guess = (low + high) / 2;
 
-        while (true) {
-            guess = (low + high)/2;
+        do {
             System.out.println("Предположим, что это число: " + guess);
-            if(guess == secretNumber) {
-                System.out.println("Вы победили!");
-                break;
-            } else if (guess < secretNumber) {
+            if (guess < secretNumber) {
                 System.out.println(guess + " меньше того, что загадал компьютер");
                 low = guess + 1;
             } else {
                 System.out.println(guess + " больше того, что загадал компьютер");
                 high = guess - 1;
             }
-        }
+            guess = (low + high) / 2;
+        } while(guess != secretNumber);
+        
+        System.out.println("Вы победили! Загаданное число: " + guess);
     }
 }
