@@ -1,5 +1,3 @@
-
-
 public class WolfTest {
     public static void main(String[] args) {
         Wolf wolfOne = new Wolf();
@@ -11,7 +9,7 @@ public class WolfTest {
 
         System.out.println("nickname = " + wolfOne.nickname);
         System.out.println("gender = " + wolfOne.gender);
-        System.out.println("grey = " + wolfOne.color);
+        System.out.println("color = " + wolfOne.color);
         System.out.println("age = " + wolfOne.age);
 
         wolfOne.walk();
