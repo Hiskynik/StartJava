@@ -5,8 +5,12 @@ public class Calculator {
     private double result;
     private boolean validOperation = true;
 
-    private boolean isValidOperator(char op) {
-        return "+-*/^%".indexOf(op) != -1;
+    void setNum1(int num1) {
+        this.num1 = num1;
+    }
+
+    void setNum2(int num2) {
+        this.num2 = num2;
     }
 
     void setOperator(char operator) {
@@ -18,12 +22,8 @@ public class Calculator {
         this.operator = operator;
     }
 
-    void setNum1(int num1) {
-        this.num1 = num1;
-    }
-
-    void setNum2(int num2) {
-        this.num2 = num2;
+    private boolean isValidOperator(char op) {
+        return "+-*/^%".indexOf(op) != -1;
     }
 
     void calculate() {
@@ -49,14 +49,11 @@ public class Calculator {
                 break;
             case '^':
                 result = 1;
-                if (num2 >= 0) {
-                    for (int i = 0; i < num2; i++) {
-                        result *= num1;
-                    }
-                } else {
-                    for (int i = 0; i < -num2; i++) {
-                        result *= num1;
-                    }
+                int absNum2 = (num2 >= 0) ? num2 : -num2;
+                for (int i = 0; i < absNum2; i++) {
+                    result *= num1;
+                }
+                if (num2 < 0) {
                     result = 1 / result;
                 }
                 break;
@@ -70,12 +67,8 @@ public class Calculator {
                 break;
             default:
                 validOperation = false;
-                System.out.printf("Ошибка: операция '%c' не реализована%n", operator);
+                System.out.printf("Ошибка: операция '%c' не поддерживается%n", operator);
         }
-    }
-
-    boolean isValidOperation() {
-        return validOperation;
     }
 
     void printResult() {
@@ -86,5 +79,9 @@ public class Calculator {
                 System.out.println(num1 + " " + operator + " " + num2 + " = " + result);
             }
         }
+    }
+
+    boolean isValidOperation() {
+        return validOperation;
     }
 }
