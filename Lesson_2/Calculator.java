@@ -3,7 +3,7 @@ public class Calculator {
     private int num2;
     private char operator;
     private double result;
-    private boolean validOperation = true;
+    private boolean calculationSuccess = true;
 
     void setNum1(int num1) {
         this.num1 = num1;
@@ -13,75 +13,64 @@ public class Calculator {
         this.num2 = num2;
     }
 
-    void setOperator(char operator) {
-        if (!isValidOperator(operator)) {
-            validOperation = false;
+    boolean setOperation(char operator) {
+        if (!isValidOperation(operator)) {
             System.out.printf("Ошибка: операция '%c' не поддерживается%n", operator);
-            return;
+            return false;
         }
         this.operator = operator;
+        return true;
     }
 
-    private boolean isValidOperator(char op) {
-        return "+-*/^%".indexOf(op) != -1;
+    private boolean isValidOperation(char operator) {
+        return "+-*/^%".indexOf(operator) != -1;
     }
 
-    void calculate() {
-        if (!validOperation) return;
-
+    boolean calculate() {
         switch (operator) {
             case '+': 
                 result = num1 + num2;
-                break;
+                return true;
             case '-':
                 result = num1 - num2;
-                break;
+                return true;
             case '*':
                 result = num1 * num2;
-                break;
+                return true;
             case '/':
                 if (num2 == 0) {
-                    validOperation = false;
+                    calculationSuccess = false;
                     System.out.println("Ошибка: деление на ноль запрещено");
-                    return;
+                    return false;
                 }
                 result = (double) num1 / num2;
-                break;
+                return true;
             case '^':
                 result = 1;
-                int absNum2 = (num2 >= 0) ? num2 : -num2;
+                int absNum2 = Math.abs(num2);
                 for (int i = 0; i < absNum2; i++) {
                     result *= num1;
                 }
-                if (num2 < 0) {
-                    result = 1 / result;
-                }
-                break;
+                result = num2 < 0 ? 1 / result : result;
+                return true;
             case '%':
                 if (num2 == 0) {
-                    validOperation = false;
+                    calculationSuccess = false;
                     System.out.println("Ошибка: деление на ноль запрещено");
-                    return;
+                    return false;
                 }
                 result = num1 / num2;
-                break;
+                return true;
             default:
-                validOperation = false;
-                System.out.printf("Ошибка: операция '%c' не поддерживается%n", operator);
+                return false;
         }
     }
 
     void printResult() {
-        if (validOperation) {
-            if (result == (int) result) {
-                System.out.println(num1 + " " + operator + " " + num2 + " = " + (int) result);
-            } else {
-                System.out.println(num1 + " " + operator + " " + num2 + " = " + result);
-            }
+        if (result == (int) result) {
+            System.out.println(num1 + " " + operator + " " + num2 + " = " + (int) result);
+        } else {
+            System.out.println(num1 + " " + operator + " " + num2 + " = " + result);
         }
-    }
-
-    boolean isValidOperation() {
-        return validOperation;
     }
 }

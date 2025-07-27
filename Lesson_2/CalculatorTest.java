@@ -14,10 +14,8 @@ public class CalculatorTest {
 
             System.out.println("Введите знак операции (+, -, *, /, ^, %): ");
             char operator = scanner.next().charAt(0);
-            calculator.setOperator(operator);
 
-            if (!calculator.isValidOperation()) {
-                calculator.printResult();
+            if (!calculator.setOperation(operator)) {
                 userResponce = askToContinue(scanner);
                 continue;
             }
@@ -26,8 +24,9 @@ public class CalculatorTest {
             int num2 = scanner.nextInt();
             calculator.setNum2(num2);
 
-            calculator.calculate();
-            calculator.printResult();
+            if (calculator.calculate()) {
+                calculator.printResult();
+            }
 
             userResponce = askToContinue(scanner);
         }
