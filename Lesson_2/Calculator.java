@@ -3,7 +3,6 @@ public class Calculator {
     private int num2;
     private char operator;
     private double result;
-    private boolean calculationSuccess = true;
 
     void setNum1(int num1) {
         this.num1 = num1;
@@ -39,7 +38,6 @@ public class Calculator {
                 return true;
             case '/':
                 if (num2 == 0) {
-                    calculationSuccess = false;
                     System.out.println("Ошибка: деление на ноль запрещено");
                     return false;
                 }
@@ -55,7 +53,6 @@ public class Calculator {
                 return true;
             case '%':
                 if (num2 == 0) {
-                    calculationSuccess = false;
                     System.out.println("Ошибка: деление на ноль запрещено");
                     return false;
                 }
