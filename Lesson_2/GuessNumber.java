@@ -3,8 +3,8 @@ import java.util.Scanner;
 class GuessNumber {
     private final Player player1;
     private final Player player2;
-    private int targetNumber;
     private Player currentPlayer;
+    private int targetNumber;
 
     public GuessNumber(Player player1, Player player2) {
         this.player1 = player1;
@@ -17,9 +17,13 @@ class GuessNumber {
         System.out.println(currentPlayer.getName() + ", ваша очередь угадывать!");
         System.out.print("Введите число от 1 до 100): ");
 
-        int guess = getValidInput(scanner);
+        int guess = inputGuess(scanner);
         currentPlayer.setNumber(guess);
 
+        checkGuess(guess);
+    }
+
+    private void checkGuess(int guess) {
         if (guess != targetNumber) {
             System.out.println("Неверно! Загаданное число " +
                     (guess < targetNumber ? "больше" : "меньше") + ".");
@@ -31,7 +35,29 @@ class GuessNumber {
         targetNumber = 0;
     }
 
-    private int getValidInput(Scanner scanner) {
+    public void startGame(Scanner scanner) {
+        while (true) {
+            GuessNumber game = new GuessNumber(player1, player2);
+            startRound(scanner);
+
+            if (!isGameOver()) {
+                continue;
+            }
+
+            if (!askToPlayAgain(scanner)) {
+                System.out.println("Игра завершена!");
+                break;
+            }
+        }
+    }
+
+    private boolean askToPlayAgain(Scanner scanner) {
+        System.out.print("Хотите продолжить? [yes/no]: ");
+        String answer = scanner.next().toLowerCase();
+        return answer.equals("yes");
+    }
+
+    private int inputGuess(Scanner scanner) {
         while (true) {
             if (!scanner.hasNextInt()) {
                 System.out.print("Это не число! Введите целое число: ");
@@ -54,10 +80,5 @@ class GuessNumber {
 
     public boolean isGameOver() {
         return targetNumber == 0;
-    }
-
-    public void resetGame() {
-        this.targetNumber = (int) (Math.random() * 100) + 1;
-        this.currentPlayer = player1;
     }
 }
