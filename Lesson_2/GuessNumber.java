@@ -13,6 +13,12 @@ class GuessNumber {
         this.currentPlayer = player1;
     }
 
+    public void start(Scanner scanner) {
+        while (targetNumber != 0) {
+            startRound(scanner);
+        }
+    }
+
     public void startRound(Scanner scanner) {
         System.out.println(currentPlayer.getName() + ", ваша очередь угадывать!");
         System.out.print("Введите число от 1 до 100): ");
@@ -20,41 +26,12 @@ class GuessNumber {
         int guess = inputGuess(scanner);
         currentPlayer.setNumber(guess);
 
-        checkGuess(guess);
-    }
-
-    private void checkGuess(int guess) {
-        if (guess != targetNumber) {
-            System.out.println("Неверно! Загаданное число " +
-                    (guess < targetNumber ? "больше" : "меньше") + ".");
+        if (isGuessCorrect(guess)) {
+            handleCorrectGuess();
+        } else {
+            handleIncorrectGuess(guess);
             switchPlayer();
-            return;
         }
-        System.out.println("Поздравляем, " + currentPlayer.getName() +
-                "! Вы угадали число " + targetNumber + "!");
-        targetNumber = 0;
-    }
-
-    public void startGame(Scanner scanner) {
-        while (true) {
-            GuessNumber game = new GuessNumber(player1, player2);
-            startRound(scanner);
-
-            if (!isGameOver()) {
-                continue;
-            }
-
-            if (!askToPlayAgain(scanner)) {
-                System.out.println("Игра завершена!");
-                break;
-            }
-        }
-    }
-
-    private boolean askToPlayAgain(Scanner scanner) {
-        System.out.print("Хотите продолжить? [yes/no]: ");
-        String answer = scanner.next().toLowerCase();
-        return answer.equals("yes");
     }
 
     private int inputGuess(Scanner scanner) {
@@ -64,8 +41,8 @@ class GuessNumber {
                 scanner.next();
                 continue;
             }
-
             int input = scanner.nextInt();
+            scanner.nextLine();
             if (input < 1 || input > 100) {
                 System.out.print("Число должно быть от 1 до 100! Попробуйте снова: ");
                 continue;
@@ -74,11 +51,22 @@ class GuessNumber {
         }
     }
 
-    private void switchPlayer() {
-        currentPlayer = (currentPlayer == player1) ? player2 : player1;
+    private boolean isGuessCorrect(int guess) {
+        return guess == targetNumber;
     }
 
-    public boolean isGameOver() {
-        return targetNumber == 0;
+    private void handleCorrectGuess() {
+        System.out.println("Поздравляем, " + currentPlayer.getName() +
+                "! Вы угадали число " + targetNumber + "!");
+        targetNumber = 0;
+    }
+
+    private void handleIncorrectGuess(int guess) {
+        System.out.println("Неверно! Загаданное число " +
+                (guess < targetNumber ? "больше" : "меньше") + ".");
+    }
+
+    private void switchPlayer() {
+        currentPlayer = (currentPlayer == player1) ? player2 : player1;
     }
 }
