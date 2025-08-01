@@ -20,9 +20,18 @@ public class GuessNumberTest {
     }
 
     private static boolean askToPlayAgain(Scanner scanner) {
-        System.out.print("Хотите продолжить? [yes/no]: ");
-        String answer = scanner.next().toLowerCase();
-        scanner.nextLine();
-        return answer.equals("yes");
+        while (true) {
+            System.out.print("Хотите продолжить? [yes/no]: ");
+            String answer = scanner.next().toLowerCase();
+            scanner.nextLine();
+
+            if (answer.equals("yes")) {
+                return true;
+            } else if (answer.equals("no")) {
+                return false;
+            }
+            
+            System.out.println("Пожалуйста, введите только 'yes' или 'no'");
+        }
     }
 }

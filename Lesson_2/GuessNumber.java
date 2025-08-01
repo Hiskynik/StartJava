@@ -14,24 +14,21 @@ class GuessNumber {
     }
 
     public void start(Scanner scanner) {
-        while (targetNumber != 0) {
-            startRound(scanner);
+        while (true) {
+            if (startRound(scanner)) {
+                break;
+            }
         }
     }
 
-    public void startRound(Scanner scanner) {
+    public boolean startRound(Scanner scanner) {
         System.out.println(currentPlayer.getName() + ", ваша очередь угадывать!");
         System.out.print("Введите число от 1 до 100): ");
 
         int guess = inputGuess(scanner);
         currentPlayer.setNumber(guess);
 
-        if (isGuessCorrect(guess)) {
-            handleCorrectGuess();
-        } else {
-            handleIncorrectGuess(guess);
-            switchPlayer();
-        }
+        return isGuessed(guess);
     }
 
     private int inputGuess(Scanner scanner) {
@@ -51,19 +48,17 @@ class GuessNumber {
         }
     }
 
-    private boolean isGuessCorrect(int guess) {
-        return guess == targetNumber;
-    }
-
-    private void handleCorrectGuess() {
-        System.out.println("Поздравляем, " + currentPlayer.getName() +
-                "! Вы угадали число " + targetNumber + "!");
-        targetNumber = 0;
-    }
-
-    private void handleIncorrectGuess(int guess) {
+    private boolean isGuessed(int guess) {
+        if (guess == targetNumber) {
+            System.out.println("Поздравляем, " + currentPlayer.getName() + 
+                    "! Вы угадали число " + targetNumber + "!");
+            return true;
+        }
+        
         System.out.println("Неверно! Загаданное число " +
-                (guess < targetNumber ? "больше" : "меньше") + ".");
+                (guess > targetNumber ? "меньше" : "больше") + ".");
+        switchPlayer();
+        return false;
     }
 
     private void switchPlayer() {
