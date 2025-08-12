@@ -9,7 +9,7 @@ public class NonBooleanMethods {
                 "() -> выбрать пункт меню в текстовом редакторе на macOS");
     }
 
-    public void calculateGPA() {
+    public void calculateGpa() {
         System.out.println(MethodNameHelper.getCurrent() + 
                 "() -> вычислить среднее значение оценок в школе №1234");
     }
@@ -44,7 +44,7 @@ public class NonBooleanMethods {
                 "() -> сбросить настройки до заводских для пылесоса Mi");
     }
     
-    public void writeToStorage() {
+    public void writeToFile() {
         System.out.println(MethodNameHelper.getCurrent() + 
                 "() -> записать содержимое в файл по указанному пути на флешку");
     }

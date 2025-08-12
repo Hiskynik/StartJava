@@ -1,38 +1,38 @@
 public class AppMain {
     public static void main(String[] args) {
-        doMultiTaskManager();
-        doLogicVerifier();
+        doNonBooleanMethods();
+        doBooleanMethods();
     }
     
-    private static void doMultiTaskManager() {
-        MultiTaskManager manager = new MultiTaskManager();
-        manager.findLongestWord();
-        manager.selectMacOsMenuItem();
-        manager.calculateGPA();
-        manager.countUniques();
-        manager.showErrorMessage();
-        manager.syncCloudStorage();
-        manager.restoreBackupData();
-        manager.pauseDownload();
-        manager.resetMiVacuum();
-        manager.writeToStorage();
-        manager.convertTemperature();
-        manager.inputMathExpression();
-        manager.determineRaceWinner();
-        manager.findBookByAuthor();
+    private static void doNonBooleanMethods() {
+        NonBooleanMethods method1 = new NonBooleanMethods();
+        method1.findLongestWord();
+        method1.selectMacOsMenuItem();
+        method1.calculateGpa();
+        method1.countUniques();
+        method1.showErrorMessage();
+        method1.syncCloudStorage();
+        method1.restoreBackupData();
+        method1.pauseDownload();
+        method1.resetMiVacuum();
+        method1.writeToFile();
+        method1.convertTemperature();
+        method1.inputMathExpression();
+        method1.determineRaceWinner();
+        method1.findBookByAuthor();
         System.out.println();
     }
 
-    private static void doLogicVerifier() {
-        LogicVerifier logicVerifier = new LogicVerifier();
-        System.out.println(logicVerifier.shouldProgramContinue());
-        System.out.println(logicVerifier.hasUniqueDigits());
-        System.out.println(logicVerifier.isLetter());
-        System.out.println(logicVerifier.hasEqualDigits());
-        System.out.println(logicVerifier.hasAttempts());
-        System.out.println(logicVerifier.isEmpty());
-        System.out.println(logicVerifier.isEvenDiceRoll());
-        System.out.println(logicVerifier.isValidPath());
-        System.out.println(logicVerifier.isExistsFile());
+    private static void doBooleanMethods() {
+        BooleanMethods method2 = new BooleanMethods();
+        System.out.println(method2.shouldProgramContinue());
+        System.out.println(method2.hasUniqueDigits());
+        System.out.println(method2.isLetter());
+        System.out.println(method2.hasEqualDigits());
+        System.out.println(method2.hasAttempts());
+        System.out.println(method2.isEmpty());
+        System.out.println(method2.isEvenDiceRoll());
+        System.out.println(method2.isValidPath());
+        System.out.println(method2.isExistsFile());
     }
 }
