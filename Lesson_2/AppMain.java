@@ -6,16 +6,16 @@ public class AppMain {
     
     private static void doMultiTaskManager() {
         MultiTaskManager manager = new MultiTaskManager();
-        manager.findLongestJavaWord();
+        manager.findLongestWord();
         manager.selectMacOsMenuItem();
-        manager.calculateSchoolGrades();
-        manager.countWarAndPeaceUniques();
+        manager.calculateGPA();
+        manager.countUniques();
         manager.showErrorMessage();
         manager.syncCloudStorage();
         manager.restoreBackupData();
-        manager.pauseAriaDownload();
+        manager.pauseDownload();
         manager.resetMiVacuum();
-        manager.writeToFlashDrive();
+        manager.writeToStorage();
         manager.convertTemperature();
         manager.inputMathExpression();
         manager.determineRaceWinner();
@@ -27,12 +27,12 @@ public class AppMain {
         LogicVerifier logicVerifier = new LogicVerifier();
         System.out.println(logicVerifier.shouldProgramContinue());
         System.out.println(logicVerifier.hasUniqueDigits());
-        System.out.println(logicVerifier.isLetterInput());
+        System.out.println(logicVerifier.isLetter());
         System.out.println(logicVerifier.hasEqualDigits());
-        System.out.println(logicVerifier.hasMarioAttempts());
-        System.out.println(logicVerifier.isEmptyInput());
+        System.out.println(logicVerifier.hasAttempts());
+        System.out.println(logicVerifier.isEmpty());
         System.out.println(logicVerifier.isEvenDiceRoll());
-        System.out.println(logicVerifier.isPathValid());
-        System.out.println(logicVerifier.isFileExists());
+        System.out.println(logicVerifier.isValidPath());
+        System.out.println(logicVerifier.isExistsFile());
     }
 }
