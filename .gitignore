@@ -1,4 +1,12 @@
 *.class
+*.xml
 out/
 options
 optionsj
+/.idea/modules.xml
+/.idea/misc.xml
+/.idea/checkstyle-idea.xml
+StartJava.iml
+/StartJava.iml
+/.idea/.gitignore
+/.idea/inspectionProfiles/Project_Default.xml
