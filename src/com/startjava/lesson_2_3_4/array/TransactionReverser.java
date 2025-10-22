@@ -5,13 +5,9 @@ import java.util.Arrays;
 class TransactionReverser {
     public static void main(String[] args) {
         run(new int[0]);
-
         run(null);
-
         run(new int[]{5});
-
         run(new int[]{6, 8, 9, 1});
-
         run(new int[]{13, 8, 5, 3, 2, 1, 1});
     }
 
@@ -27,10 +23,9 @@ class TransactionReverser {
         }
 
         int[] reversed = new int[transactions.length];
-        int i = 0;
+        int len = transactions.length;
         for (int transaction : transactions) {
-            reversed[transactions.length - 1 - i] = transaction;
-            i++;
+            reversed[--len] = transaction;
         }
 
         return reversed;

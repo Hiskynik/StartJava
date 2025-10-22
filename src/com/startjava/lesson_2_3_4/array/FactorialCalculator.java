@@ -8,7 +8,6 @@ public class FactorialCalculator {
 
     public static void main(String[] args) {
         System.out.println("=== ВЫЧИСЛЕНИЕ ФАКТОРИАЛОВ ===\n");
-
         testEmptyArray();
         testNullArray();
         testSingleNegativeNumber();
@@ -19,35 +18,35 @@ public class FactorialCalculator {
     private static void testEmptyArray() {
         System.out.println("Тест 1: Пустой массив");
         int[] emptyArray = new int[0];
-        String[] outputs = calculateFactorials(emptyArray);
-        display(outputs);
+        String[] factorials = calculateFactorials(emptyArray);
+        displayFactorials(factorials);
     }
 
     private static void testNullArray() {
         System.out.println("Тест 2: Null массив");
-        String[] outputs = calculateFactorials((int[]) null);
-        display(outputs);
+        String[] factorials = calculateFactorials((int[]) null);
+        displayFactorials(factorials);
     }
 
     private static void testSingleNegativeNumber() {
         System.out.println("Тест 3: Отрицательное число");
         int[] singleNumber = {-5};
-        String[] outputs = calculateFactorials(singleNumber);
-        display(outputs);
+        String[] factorials = calculateFactorials(singleNumber);
+        displayFactorials(factorials);
     }
 
     private static void testNumbers1() {
         System.out.println("Тест 4: Числа 21, 0, 7");
         int[] numbers = {21, 0, 7};
-        String[] outputs = calculateFactorials(numbers);
-        display(outputs);
+        String[] factorials = calculateFactorials(numbers);
+        displayFactorials(factorials);
     }
 
     private static void testNumbers2() {
         System.out.println("Тест 5: Числа 1, 20, 5, -3");
         int[] numbers = {1, 20, 5, -3};
-        String[] outputs = calculateFactorials(numbers);
-        display(outputs);
+        String[] factorials = calculateFactorials(numbers);
+        displayFactorials(factorials);
     }
 
     public static String[] calculateFactorials(int... numbers) {
@@ -61,19 +60,19 @@ public class FactorialCalculator {
             return new String[0];
         }
 
-        String[] results = new String[numbers.length];
+        String[] factorials = new String[numbers.length];
         boolean hasValidFactorial = false;
 
         for (int i = 0; i < numbers.length; i++) {
-            results[i] = calculateFactorials(numbers[i]);
-            if (results[i] != null) {
+            factorials[i] = calculateFactorial(numbers[i]);
+            if (factorials[i] != null) {
                 hasValidFactorial = true;
             }
         }
-        return hasValidFactorial ? results : null;
+        return hasValidFactorial ? factorials : null;
     }
 
-    private static String calculateFactorials(int number) {
+    private static String calculateFactorial(int number) {
         if (number < 0) {
             System.out.println("  " + String.format(ERROR_NEGATIVE, number));
             return null;
@@ -84,7 +83,8 @@ public class FactorialCalculator {
             return null;
         }
 
-        return formatFactorial(number, computeFactorial(number));
+        long factorialValue = computeFactorial(number);
+        return formatFactorial(number, factorialValue);
     }
 
     private static long computeFactorial(int n) {
@@ -103,7 +103,8 @@ public class FactorialCalculator {
         if (number == 0) return "0! = 1";
         if (number == 1) return "1! = 1";
 
-        return number + "! = " + buildMultiplicationSequence(number) + " = " + factorial;
+        String multiplicationSequence = buildMultiplicationSequence(number);
+        return number + "! = " + multiplicationSequence + " = " + factorial;
     }
 
     private static String buildMultiplicationSequence(int n) {
@@ -117,14 +118,14 @@ public class FactorialCalculator {
         return sequence.toString();
     }
 
-    private static void display(String[] outputs) {
-        if (outputs == null) {
+    private static void displayFactorials(String[] factorials) {
+        if (factorials == null) {
             return;
         }
 
-        for (String output : outputs) {
-            if (output != null) {
-                System.out.println("  " + output);
+        for (String factorial : factorials) {
+            if (factorial != null) {
+                System.out.println("  " + factorial);
             }
         }
         System.out.println();
