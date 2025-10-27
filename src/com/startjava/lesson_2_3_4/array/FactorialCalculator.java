@@ -18,38 +18,38 @@ public class FactorialCalculator {
     private static void testEmptyArray() {
         System.out.println("Тест 1: Пустой массив");
         int[] emptyArray = new int[0];
-        String[] factorials = calculateFactorials(emptyArray);
-        displayFactorials(factorials);
+        FactorialData[] factorialData = calculateFactorials(emptyArray);
+        displayFactorials(factorialData);
     }
 
     private static void testNullArray() {
         System.out.println("Тест 2: Null массив");
-        String[] factorials = calculateFactorials((int[]) null);
-        displayFactorials(factorials);
+        FactorialData[] factorialData = calculateFactorials((int[]) null);
+        displayFactorials(factorialData);
     }
 
     private static void testSingleNegativeNumber() {
         System.out.println("Тест 3: Отрицательное число");
         int[] singleNumber = {-5};
-        String[] factorials = calculateFactorials(singleNumber);
-        displayFactorials(factorials);
+        FactorialData[] factorialData = calculateFactorials(singleNumber);
+        displayFactorials(factorialData);
     }
 
     private static void testNumbers1() {
         System.out.println("Тест 4: Числа 21, 0, 7");
         int[] numbers = {21, 0, 7};
-        String[] factorials = calculateFactorials(numbers);
-        displayFactorials(factorials);
+        FactorialData[] factorialData = calculateFactorials(numbers);
+        displayFactorials(factorialData);
     }
 
     private static void testNumbers2() {
         System.out.println("Тест 5: Числа 1, 20, 5, -3");
         int[] numbers = {1, 20, 5, -3};
-        String[] factorials = calculateFactorials(numbers);
-        displayFactorials(factorials);
+        FactorialData[] factorialData = calculateFactorials(numbers);
+        displayFactorials(factorialData);
     }
 
-    public static String[] calculateFactorials(int... numbers) {
+    public static FactorialData[] calculateFactorials(int... numbers) {
         if (numbers == null) {
             System.out.println("  " + ERROR_NULL_ARRAY);
             return null;
@@ -57,36 +57,37 @@ public class FactorialCalculator {
 
         if (numbers.length == 0) {
             System.out.println("  " + ERROR_EMPTY_ARRAY);
-            return new String[0];
+            return new FactorialData[0];
         }
 
-        String[] factorials = new String[numbers.length];
+        FactorialData[] factorialData = new FactorialData[numbers.length];
         boolean hasValidFactorial = false;
 
         for (int i = 0; i < numbers.length; i++) {
-            factorials[i] = calculateFactorial(numbers[i]);
-            if (factorials[i] != null) {
+            factorialData[i] = calculateFactorial(numbers[i]);
+            if (factorialData[i] != null && factorialData[i].valid()) {
                 hasValidFactorial = true;
             }
         }
-        return hasValidFactorial ? factorials : null;
+        return hasValidFactorial ? factorialData : null;
     }
 
-    private static String calculateFactorial(int number) {
+    private static FactorialData calculateFactorial(int number) {
         if (number < 0) {
             System.out.println("  " + String.format(ERROR_NEGATIVE, number));
-            return null;
+            return new FactorialData(number, -1, false);
         }
 
         if (number > 20) {
             System.out.println("  " + String.format(ERROR_TOO_LARGE, number));
-            return null;
+            return new FactorialData(number, -1, false);
         }
 
         long factorialValue = computeFactorial(number);
-        return formatFactorial(number, factorialValue);
+        return new FactorialData(number, factorialValue, true);
     }
 
+    // НЕ ИЗМЕНЯЛСЯ: Только вычисляет числовое значение факториала
     private static long computeFactorial(int n) {
         if (n == 0 || n == 1) {
             return 1;
@@ -97,6 +98,20 @@ public class FactorialCalculator {
             factorial *= i;
         }
         return factorial;
+    }
+
+    private static void displayFactorials(FactorialData[] factorialData) {
+        if (factorialData == null) {
+            return;
+        }
+
+        for (FactorialData data : factorialData) {
+            if (data != null && data.valid()) {
+                String expression = formatFactorial(data.number(), data.factorial());
+                System.out.println("  " + expression);
+            }
+        }
+        System.out.println();
     }
 
     private static String formatFactorial(int number, long factorial) {
@@ -118,16 +133,6 @@ public class FactorialCalculator {
         return sequence.toString();
     }
 
-    private static void displayFactorials(String[] factorials) {
-        if (factorials == null) {
-            return;
-        }
-
-        for (String factorial : factorials) {
-            if (factorial != null) {
-                System.out.println("  " + factorial);
-            }
-        }
-        System.out.println();
+    record FactorialData(int number, long factorial, boolean valid) {
     }
 }
