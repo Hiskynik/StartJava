@@ -3,74 +3,84 @@ package com.startjava.lesson_2_3_4.array;
 import java.util.Random;
 
 public class ValueThresholdFilter {
-    public static void main(String[] args) {
-        final int Num_size = 15;
+    private static final int MEASUREMENTS_COUNT = 15;
 
-        double[] initialValues = generateRandomValues(Num_size);
+    public static void main(String[] args) {
+        double[] sensorReadings = generateSensorReadings();
 
         System.out.println("Сгенерированы случайные значения:");
-        displayValues(initialValues, "Исходные данные");
+        displayReadings(sensorReadings, "Исходные данные");
 
-        int[] testCases = {-1, 15, 0, 14};
+        int[] thresholdIndexes = {-1, 15, 0, 14};
 
-        for (int testIndex : testCases) {
-            thresholdValue(initialValues, testIndex);
+        for (int index : thresholdIndexes) {
+            filterReadingsByThreshold(sensorReadings, index);
         }
     }
 
-    public static double[] generateRandomValues(int count) {
-        double[] values = new double[count];
+    private static double[] generateSensorReadings() {
+        double[] readings = new double[MEASUREMENTS_COUNT];
         Random generator = new Random();
 
-        for (int i = 0; i < count; i++) {
-            values[i] = generator.nextDouble();
+        for (int i = 0; i < MEASUREMENTS_COUNT; i++) {
+            readings[i] = generator.nextDouble();
         }
 
-        return values;
+        return readings;
     }
 
-    public static boolean isValidIndex(int index, int size) {
+    private static boolean isValidIndex(int index, int size) {
         return index >= 0 && index < size;
     }
 
-    public static double getThresholdValue(double[] num, int referenceIndex) {
-        if (!isValidIndex(referenceIndex, num.length)) {
-            throw new IllegalArgumentException(String.format(
-                    "Ошибка: индекс %d недопустим. Допустимый диапазон: [0, %d]",
-                    referenceIndex, num.length - 1));
-        }
-        return num[referenceIndex];
+    private static double getThresholdReading(double[] readings, int thresholdIndex) {
+        return readings[thresholdIndex];
     }
 
-    public static void filterValuesAboveThreshold(double[] num, double threshold) {
-        for (int i = 0; i < num.length; i++) {
-            if (num[i] > threshold) {
-                num[i] = 0.0;
+    private static void setReadingsAboveThresholdToZero(double[] readings, double threshold) {
+        for (int i = 0; i < readings.length; i++) {
+            if (readings[i] > threshold) {
+                readings[i] = 0.0;
             }
         }
     }
 
-    public static void displayValues(double[] values, String title) {
-        System.out.println(title + ":");
-        for (double value : values) {
-            System.out.printf("%.3f%n", value);
+    private static double[] createFilteredReadings(double[] originalReadings, double threshold) {
+        double[] filteredReadings = originalReadings.clone();
+        setReadingsAboveThresholdToZero(filteredReadings, threshold);
+        return filteredReadings;
+    }
+
+    private static void displayReadings(double[] readings, String title) {
+        System.out.print(title + ": ");
+
+        for (int i = 0; i < 8 && i < readings.length; i++) {
+            System.out.printf("%.3f ", readings[i]);
+        }
+        System.out.println();
+
+        if (readings.length > 8) {
+            System.out.printf("%18s", "");
+            for (int i = 8; i < readings.length; i++) {
+                System.out.printf("%.3f ", readings[i]);
+            }
+            System.out.println();
         }
     }
 
-    public static void thresholdValue(double[] originalValue, int thresholdIndex) {
+    private static void filterReadingsByThreshold(double[] sensorReadings, int thresholdIndex) {
         System.out.println("\n--- Обработка с индексом порога: " + thresholdIndex + " ---");
 
-        try {
-            double threshold = getThresholdValue(originalValue, thresholdIndex);
-            System.out.printf("Пороговое значение из ячейки [%d]: %.3f%n", thresholdIndex, threshold);
-
-            double[] transformedValue = originalValue.clone();
-
-            filterValuesAboveThreshold(transformedValue, threshold);
-
-            displayValues(transformedValue, "Отфильтрованные данные");
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+        if (!isValidIndex(thresholdIndex, sensorReadings.length)) {
+            System.out.printf("Ошибка: индекс %d недопустим. Допустимый диапазон: [0, %d]%n",
+                    thresholdIndex, sensorReadings.length - 1);
+            return;
         }
+
+        double thresholdValue = getThresholdReading(sensorReadings, thresholdIndex);
+        System.out.printf("Пороговое значение из ячейки [%d]: %.3f%n", thresholdIndex, thresholdValue);
+
+        double[] zeroedReadings = createFilteredReadings(sensorReadings, thresholdValue);
+        displayReadings(zeroedReadings, "Отфильтрованные данные");
     }
 }
