@@ -21,7 +21,7 @@ public class FactorialCalculator {
 
     private static void testNullArray() {
         System.out.println("Тест 2: Null массив");
-        long[] factorials = calculateFactorials(null);
+        long[] factorials = calculateFactorials((int[]) null);
         displayFactorials(null, factorials);
     }
 
@@ -77,7 +77,21 @@ public class FactorialCalculator {
             if (factorials[i] == -1) {
                 System.out.println("  " + numbers[i] + "! = не вычисляется (недопустимое значение)");
             } else {
-                System.out.println("  " + numbers[i] + "! = " + factorials[i]);
+                StringBuilder expression = new StringBuilder();
+                expression.append(numbers[i]).append("! = ");
+
+                if (numbers[i] == 0 || numbers[i] == 1) {
+                    expression.append("1");
+                } else {
+                    for (int j = 1; j <= numbers[i]; j++) {
+                        if (j > 1) {
+                            expression.append(" * ");
+                        }
+                        expression.append(j);
+                    }
+                    expression.append(" = ").append(factorials[i]);
+                }
+                System.out.println("  " + expression);
             }
         }
         System.out.println();
