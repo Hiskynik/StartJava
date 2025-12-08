@@ -9,8 +9,18 @@ public class ValueThresholdFilter {
         int[] indexes = {-1, 15, 0, 14};
 
         for (int index : indexes) {
+            System.out.println();
+
             float[] randomNums = generateRandomNums();
-            filterByIndex(randomNums, index);
+            float threshold = filterAboveIndexValue(randomNums, index);
+
+            if (threshold < 0) {
+                continue;
+            }
+
+            displayNums(randomNums, "Исходный массив");
+            System.out.printf("Пороговое значение из ячейки [%d]: %.3f%n", index, threshold);
+            displayNums(randomNums, "Измененный массив");
         }
     }
 
@@ -25,30 +35,24 @@ public class ValueThresholdFilter {
         return nums;
     }
 
-    private static void filterByIndex(float[] nums, int index) {
+    private static float filterAboveIndexValue(float[] nums, int index) {
         if (!isValidIndex(index, nums.length)) {
-            System.out.printf("\nОшибка: индекс %d недопустим. Допустимый диапазон: [0, %d]%n",
+            System.out.printf("Ошибка: индекс %d недопустим. Допустимый диапазон: [0, %d]%n",
                     index, nums.length - 1);
-            return;
+            return -1;
         }
 
         float threshold = nums[index];
-        System.out.printf("\nПороговое значение из ячейки [%d]: %.3f%n", index, threshold);
-
-        System.out.println("Исходный массив:");
-        displayNums(nums);
-
         setNumsAboveThresholdToZero(nums, threshold);
-
-        System.out.println("Измененный массив:");
-        displayNums(nums);
+        return threshold;
     }
 
     private static boolean isValidIndex(int index, int size) {
         return index >= 0 && index < size;
     }
 
-    private static void displayNums(float[] nums) {
+    private static void displayNums(float[] nums, String label) {
+        System.out.println(label + ":");
         for (int i = 0; i < nums.length; i++) {
             System.out.printf("%.3f ", nums[i]);
             if (i == 7) {
