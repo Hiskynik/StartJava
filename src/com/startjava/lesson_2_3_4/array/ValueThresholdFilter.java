@@ -12,13 +12,16 @@ public class ValueThresholdFilter {
             System.out.println();
 
             float[] randomNums = generateRandomNums();
+
+            float[] originalNums = randomNums.clone();
+
             float threshold = filterAboveIndexValue(randomNums, index);
 
             if (threshold < 0) {
                 continue;
             }
 
-            displayNums(randomNums, "Исходный массив");
+            displayNums(originalNums, "Исходный массив");
             System.out.printf("Пороговое значение из ячейки [%d]: %.3f%n", index, threshold);
             displayNums(randomNums, "Измененный массив");
         }
