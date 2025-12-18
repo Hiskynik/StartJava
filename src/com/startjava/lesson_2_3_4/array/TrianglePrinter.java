@@ -2,42 +2,62 @@ package com.startjava.lesson_2_3_4.array;
 
 public class TrianglePrinter {
     public static void main(String[] args) {
-        System.out.println("Треугольник 1 (0, 9, true):");
-        printTriangle('0', '9', true);
-
-        System.out.println("\nТреугольник 2 (/, !, false):");
-        printTriangle('/', '!', false);
-
-        System.out.println("\nТреугольник 3 (A, J, false):");
-        printTriangle('A', 'J', false);
+        printTriangleSet1();
+        printTriangleSet2();
+        printTriangleSet3();
     }
 
-    public static void printTriangle(char start, char end, boolean ascending) {
+    private static void printTriangleSet1() {
+        System.out.println("Треугольник 1 (0, 9, true):");
+        char[] sequence = generateSequence('0', '9', true);
+        printTriangle(sequence);
+    }
+
+    private static void printTriangleSet2() {
+        System.out.println("\nТреугольник 2 (/, !, false):");
+        char[] sequence = generateSequence('/', '!', false);
+        printTriangle(sequence);
+    }
+
+    private static void printTriangleSet3() {
+        System.out.println("\nТреугольник 3 (A, J, false):");
+        char[] sequence = generateSequence('A', 'J', false);
+        printTriangle(sequence);
+    }
+
+    public static char[] generateSequence(char start, char end, boolean ascending) {
         if (start > end) {
             System.out.println("Ошибка: левая граница (" + (int) start + ") > правой (" + (int) end + ")");
-            return;
+            return new char[0];
         }
 
         int count = end - start + 1;
-
         char[] chars = new char[count];
-        if (ascending) {
-            for (int i = 0; i < count; i++) {
-                chars[i] = (char) (start + i);
-            }
-        } else {
-            for (int i = 0; i < count; i++) {
-                chars[i] = (char) (end - i);
-            }
+
+        for (int i = 0; i < count; i++) {
+            chars[i] = ascending ?
+                    (char) (start + i) :
+                    (char) (end - i);
         }
+
+        return chars;
+    }
+
+    public static void printTriangle(char[] chars) {
+        if (chars.length == 0) {
+            return;
+        }
+
+        int count = chars.length;
+        StringBuilder line = new StringBuilder();
 
         for (int i = 0; i < count; i++) {
             int symbolCount = 2 * i + 1;
             int spaces = count - i - 1;
 
-            StringBuilder line = new StringBuilder();
+            line.setLength(0);
             line.append(" ".repeat(spaces));
-            line.append(String.valueOf(chars[i]).repeat(symbolCount));
+            line.append(String.valueOf(chars[i]).repeat(Math.max(0, symbolCount)));
 
             System.out.println(line);
         }

@@ -10,7 +10,6 @@ public class ValueThresholdFilter {
 
         for (int index : indexes) {
             float[] randomNums = generateRandomNums();
-
             float[] filteredNums = filterAboveIndexValue(randomNums, index);
 
             if (filteredNums == null) {
