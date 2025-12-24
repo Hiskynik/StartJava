@@ -49,17 +49,20 @@ public class TrianglePrinter {
         }
 
         int count = chars.length;
-        StringBuilder line = new StringBuilder();
+        StringBuilder triangle = new StringBuilder();
 
         for (int i = 0; i < count; i++) {
             int symbolCount = 2 * i + 1;
             int spaces = count - i - 1;
 
-            line.setLength(0);
-            line.append(" ".repeat(spaces));
-            line.append(String.valueOf(chars[i]).repeat(Math.max(0, symbolCount)));
+            triangle.append(" ".repeat(spaces))
+                    .append(String.valueOf(chars[i]).repeat(symbolCount));
 
-            System.out.println(line);
+            if (i < count - 1) {
+                triangle.append('\n');
+            }
         }
+
+        System.out.println(triangle);
     }
 }
