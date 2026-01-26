@@ -21,40 +21,26 @@ public class PasswordCracker {
     private static final char[] SPINNER_CHARS = {'-', '\\', '|', '/'};
 
     public static void main(String[] args) {
-        System.out.println("""
-                ГЕНЕРАТОР И ВЗЛОМЩИК ПАРОЛЕЙ
-                """);
+        System.out.println("ГЕНЕРАТОР И ВЗЛОМЩИК ПАРОЛЕЙ\n");
 
-        String[] testPasswords = {
-                "123456",
-                "",
-                "abc",
-                "12345678",
-                "Password",
-                "!@#$%^&*",
-                "Passw0rd",
-                "password123",
-                "MyP@ssw0rd!"
-        };
+        System.out.println("Пароль '123456':");
+        testPassword("123456".toCharArray());
 
-        for (int i = 0; i < testPasswords.length; i++) {
-            System.out.println("Тест " + (i + 1) + ": '" + testPasswords[i] + "'");
-            crackPassword(testPasswords[i].toCharArray());
-            System.out.println();
-        }
-
-        System.out.println("ГЕНЕРАЦИЯ И ВЗЛОМ СЛУЧАЙНЫХ ПАРОЛЕЙ");
         for (int i = 1; i <= 3; i++) {
-            System.out.println("\nСгенерированный пароль " + i);
-            char[] generatedPassword = generateRandomPassword();
-            crackPassword(generatedPassword);
-            clearPassword(generatedPassword);
+            System.out.println("\nСгенерированный пароль " + i + ":");
+            char[] password = generateRandomPassword();
+            testPassword(password);
+            clearPassword(password);
         }
+    }
+
+    public static void testPassword(char[] password) {
+        boolean isWeak = analyzePassword(password);
+        crackPassword(password, isWeak);
     }
 
     public static void showSpinner() {
         System.out.print("  Взлом пароля: ");
-        System.out.flush();
 
         int totalRotations = 3;
         int totalSpins = totalRotations * SPINNER_CHARS.length;
@@ -62,12 +48,10 @@ public class PasswordCracker {
         try {
             for (int i = 0; i < totalSpins; i++) {
                 System.out.print(SPINNER_CHARS[i % SPINNER_CHARS.length]);
-                System.out.flush();
 
                 Thread.sleep(100);
 
                 System.out.print("\b");
-                System.out.flush();
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -75,16 +59,13 @@ public class PasswordCracker {
         System.out.print("  \r");
     }
 
-    public static void crackPassword(char[] password) {
+    public static void crackPassword(char[] password, boolean isWeak) {
         if (password == null || password.length == 0) {
             System.out.println(RED + CROSS_MARK + " Password cracked: (пустой пароль)" + RESET);
-            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль не может быть пустым" + RESET);
             return;
         }
 
         showSpinner();
-
-        boolean isWeak = isPasswordWeak(password);
 
         String color;
         String message;
@@ -98,109 +79,74 @@ public class PasswordCracker {
         }
 
         System.out.println(color + message + new String(password) + RESET);
-
-        analyzePassword(password);
     }
 
-    public static boolean isPasswordWeak(char[] password) {
-        if (password == null || password.length == 0) {
-            return true;
-        }
-
-        if (isPasswordBlacklisted(password)) {
-            return true;
-        }
-
-        if (password.length < 8) {
-            return true;
-        }
-
-        PasswordAnalysis analysis = analyzePasswordCharacteristics(password);
-
-        if (analysis.hasDigits && !analysis.hasLetters && !analysis.hasSpecial) {
-            return true;
-        }
-
-        if (analysis.hasLetters && !analysis.hasDigits && !analysis.hasSpecial) {
-            return true;
-        }
-
-        if (analysis.hasSpecial && !analysis.hasLetters && !analysis.hasDigits) {
-            return true;
-        }
-
-        if (!analysis.hasSpecial && (analysis.hasLetters || analysis.hasDigits)) {
-            return true;
-        }
-
-        return analysis.hasLetters && (!analysis.hasLower || !analysis.hasUpper);
-    }
-
-    public static void analyzePassword(char[] password) {
-        if (password == null || password.length == 0) {
-            return;
-        }
-
-        checkPasswordWeakness(password);
-    }
-
-    public static void checkPasswordWeakness(char[] password) {
+    public static boolean analyzePassword(char[] password) {
         if (password == null || password.length == 0) {
             System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль не может быть пустым" + RESET);
-            return;
+            return true;
         }
+
+        boolean isWeak = false;
 
         if (isPasswordBlacklisted(password)) {
             System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Не используйте пароли из списка популярных: https://nordpass.com/most-common-passwords-list" + RESET);
+            isWeak = true;
         }
 
         if (password.length < 8) {
             System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль должен быть не менее 8 символов" + RESET);
+            isWeak = true;
         }
 
-        PasswordAnalysis analysis = analyzePasswordCharacteristics(password);
-
-        if (analysis.hasDigits && !analysis.hasLetters && !analysis.hasSpecial) {
-            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль содержит только цифры" + RESET);
-        }
-
-        if (analysis.hasLetters && !analysis.hasDigits && !analysis.hasSpecial) {
-            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль содержит только буквы" + RESET);
-        }
-
-        if (analysis.hasSpecial && !analysis.hasLetters && !analysis.hasDigits) {
-            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль содержит только спец. символы" + RESET);
-        }
-
-        if (!analysis.hasSpecial && (analysis.hasLetters || analysis.hasDigits)) {
-            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль не содержит спец. символы" + RESET);
-        }
-
-        if (analysis.hasLetters && (!analysis.hasLower || !analysis.hasUpper)) {
-            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: " +
-                    "Пароль не содержит буквы нижнего и верхнего регистров" + RESET);
-        }
-    }
-
-    private static PasswordAnalysis analyzePasswordCharacteristics(char[] password) {
-        PasswordAnalysis analysis = new PasswordAnalysis();
+        boolean hasLetters = false;
+        boolean hasDigits = false;
+        boolean hasSpecial = false;
+        boolean hasLower = false;
+        boolean hasUpper = false;
 
         for (char symbol : password) {
             if (Character.isLetter(symbol)) {
-                analysis.hasLetters = true;
+                hasLetters = true;
                 if (Character.isLowerCase(symbol)) {
-                    analysis.hasLower = true;
+                    hasLower = true;
                 } else if (Character.isUpperCase(symbol)) {
-                    analysis.hasUpper = true;
+                    hasUpper = true;
                 }
             } else if (Character.isDigit(symbol)) {
-                analysis.hasDigits = true;
+                hasDigits = true;
             } else {
-                analysis.hasSpecial = true;
+                hasSpecial = true;
             }
         }
 
-        return analysis;
+        if (hasDigits && !hasLetters && !hasSpecial) {
+            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль содержит только цифры" + RESET);
+            isWeak = true;
+        }
+
+        if (hasLetters && !hasDigits && !hasSpecial) {
+            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль содержит только буквы" + RESET);
+            isWeak = true;
+        }
+
+        if (hasSpecial && !hasLetters && !hasDigits) {
+            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль содержит только спец. символы" + RESET);
+            isWeak = true;
+        }
+
+        if (!hasSpecial && (hasLetters || hasDigits)) {
+            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль не содержит спец. символы" + RESET);
+            isWeak = true;
+        }
+
+        if (hasLetters && (!hasLower || !hasUpper)) {
+            System.out.println(YELLOW +
+                    "  ПРЕДУПРЕЖДЕНИЕ: Пароль не содержит буквы нижнего и верхнего регистров" + RESET);
+            isWeak = true;
+        }
+
+        return isWeak;
     }
 
     public static boolean isPasswordBlacklisted(char[] password) {
@@ -217,34 +163,14 @@ public class PasswordCracker {
 
     public static char[] generateRandomPassword() {
         Random random = new Random();
-        int passwordLength = random.nextInt(5) + 8;
+        int passwordLength = random.nextInt(6, 13);
 
         char[] password = new char[passwordLength];
 
-        PasswordAnalysis analysis;
-        int attempts = 0;
-        final int MaxAttempts = 100;
-
-        do {
-            analysis = new PasswordAnalysis();
-
-            for (int i = 0; i < passwordLength; i++) {
-                char symbol = (char) random.nextInt(33, 127);
-                password[i] = symbol;
-
-                if (Character.isLowerCase(symbol)) {
-                    analysis.hasLower = true;
-                } else if (Character.isUpperCase(symbol)) {
-                    analysis.hasUpper = true;
-                } else if (Character.isDigit(symbol)) {
-                    analysis.hasDigits = true;
-                } else {
-                    analysis.hasSpecial = true;
-                }
-            }
-            attempts++;
-        } while ((!analysis.hasLower || !analysis.hasUpper || !analysis.hasDigits || !analysis.hasSpecial ||
-                isPasswordBlacklisted(password)) && attempts < MaxAttempts);
+        for (int i = 0; i < passwordLength; i++) {
+            char symbol = (char) random.nextInt(33, 127);
+            password[i] = symbol;
+        }
 
         return password;
     }
@@ -253,13 +179,5 @@ public class PasswordCracker {
         if (password != null) {
             Arrays.fill(password, '\0');
         }
-    }
-
-    private static class PasswordAnalysis {
-        boolean hasLetters = false;
-        boolean hasDigits = false;
-        boolean hasSpecial = false;
-        boolean hasLower = false;
-        boolean hasUpper = false;
     }
 }
