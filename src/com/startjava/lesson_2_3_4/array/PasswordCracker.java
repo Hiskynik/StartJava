@@ -14,142 +14,107 @@ public class PasswordCracker {
     private static final String RED = "\033[31m";
     private static final String GREEN = "\033[32m";
     private static final String YELLOW = "\033[33m";
+    private static final String URL = "https://nordpass.com/most-common-passwords-list";
 
-    private static final String CHECK_MARK = "✓";
-    private static final String CROSS_MARK = "✗";
+    private static final String CHECK_MARK = "✓ Password cracked: ";
+    private static final String CROSS_MARK = "✗ Strong password: ";
 
-    private static final char[] SPINNER_CHARS = {'-', '\\', '|', '/'};
+    private static final char[] SPINS = {'-', '\\', '|', '/'};
 
     public static void main(String[] args) {
-        System.out.println("ГЕНЕРАТОР И ВЗЛОМЩИК ПАРОЛЕЙ\n");
+        char[][] passwords = new char[4][];
+        passwords[0] = "123456".toCharArray();
 
-        System.out.println("Пароль '123456':");
-        testPassword("123456".toCharArray());
+        for (int i = 1; i < passwords.length; i++) {
+            passwords[i] = generateRandomPassword();
+        }
 
-        for (int i = 1; i <= 3; i++) {
-            System.out.println("\nСгенерированный пароль " + i + ":");
-            char[] password = generateRandomPassword();
-            testPassword(password);
-            clearPassword(password);
+        for (char[] password : passwords) {
+            crackPassword(password, analyzePassword(password));
+            System.out.println();
         }
     }
 
-    public static void testPassword(char[] password) {
-        boolean isWeak = analyzePassword(password);
-        crackPassword(password, isWeak);
-    }
+    private static char[] generateRandomPassword() {
+        Random random = new Random();
+        int passwordLength = random.nextInt(6, 13);
+        char[] password = new char[passwordLength];
 
-    public static void showSpinner() {
-        System.out.print("  Взлом пароля: ");
-
-        int totalRotations = 3;
-        int totalSpins = totalRotations * SPINNER_CHARS.length;
-
-        try {
-            for (int i = 0; i < totalSpins; i++) {
-                System.out.print(SPINNER_CHARS[i % SPINNER_CHARS.length]);
-
-                Thread.sleep(100);
-
-                System.out.print("\b");
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        System.out.print("  \r");
-    }
-
-    public static void crackPassword(char[] password, boolean isWeak) {
-        if (password == null || password.length == 0) {
-            System.out.println(RED + CROSS_MARK + " Password cracked: (пустой пароль)" + RESET);
-            return;
+        for (int i = 0; i < passwordLength; i++) {
+            char symbol = (char) random.nextInt(33, 127);
+            password[i] = symbol;
         }
 
-        showSpinner();
-
-        String color;
-        String message;
-
-        if (isWeak) {
-            color = GREEN;
-            message = CHECK_MARK + " Password cracked: ";
-        } else {
-            color = RED;
-            message = CROSS_MARK + " Strong password: ";
-        }
-
-        System.out.println(color + message + new String(password) + RESET);
+        return password;
     }
 
-    public static boolean analyzePassword(char[] password) {
+    private static boolean analyzePassword(char[] password) {
         if (password == null || password.length == 0) {
             System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль не может быть пустым" + RESET);
             return true;
         }
 
-        boolean isWeak = false;
-
         if (isPasswordBlacklisted(password)) {
-            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Не используйте пароли из списка популярных: https://nordpass.com/most-common-passwords-list" + RESET);
-            isWeak = true;
+            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Не используйте пароли из списка:" + URL + RESET);
+            return true;
         }
 
         if (password.length < 8) {
             System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль должен быть не менее 8 символов" + RESET);
-            isWeak = true;
+            return true;
         }
 
-        boolean hasLetters = false;
-        boolean hasDigits = false;
+        boolean hasDigit = false;
         boolean hasSpecial = false;
         boolean hasLower = false;
         boolean hasUpper = false;
 
         for (char symbol : password) {
             if (Character.isLetter(symbol)) {
-                hasLetters = true;
                 if (Character.isLowerCase(symbol)) {
                     hasLower = true;
                 } else if (Character.isUpperCase(symbol)) {
                     hasUpper = true;
                 }
             } else if (Character.isDigit(symbol)) {
-                hasDigits = true;
+                hasDigit = true;
             } else {
                 hasSpecial = true;
             }
         }
 
-        if (hasDigits && !hasLetters && !hasSpecial) {
+        boolean hasLetter = hasLower || hasUpper;
+
+        if (hasDigit && !hasLetter && !hasSpecial) {
             System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль содержит только цифры" + RESET);
-            isWeak = true;
+            return true;
         }
 
-        if (hasLetters && !hasDigits && !hasSpecial) {
+        if (hasLetter && !hasDigit && !hasSpecial) {
             System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль содержит только буквы" + RESET);
-            isWeak = true;
+            return true;
         }
 
-        if (hasSpecial && !hasLetters && !hasDigits) {
+        if (hasSpecial && !hasLetter && !hasDigit) {
             System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль содержит только спец. символы" + RESET);
-            isWeak = true;
+            return true;
         }
 
-        if (!hasSpecial && (hasLetters || hasDigits)) {
+        if (!hasSpecial && (hasLetter || hasDigit)) {
             System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: Пароль не содержит спец. символы" + RESET);
-            isWeak = true;
+            return true;
         }
 
-        if (hasLetters && (!hasLower || !hasUpper)) {
-            System.out.println(YELLOW +
-                    "  ПРЕДУПРЕЖДЕНИЕ: Пароль не содержит буквы нижнего и верхнего регистров" + RESET);
-            isWeak = true;
+        if (hasLetter && (!hasLower || !hasUpper)) {
+            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: " +
+                    "Пароль не содержит буквы нижнего и верхнего регистров" + RESET);
+            return true;
         }
 
-        return isWeak;
+        return false;
     }
 
-    public static boolean isPasswordBlacklisted(char[] password) {
+    private static boolean isPasswordBlacklisted(char[] password) {
         if (password == null) return false;
 
         for (char[] blacklistedPassword : BLACKLIST) {
@@ -161,23 +126,33 @@ public class PasswordCracker {
         return false;
     }
 
-    public static char[] generateRandomPassword() {
-        Random random = new Random();
-        int passwordLength = random.nextInt(6, 13);
+    private static void showSpinner() {
+        System.out.print("  Взлом пароля: ");
 
-        char[] password = new char[passwordLength];
+        int totalRotations = 3;
+        int totalSpins = totalRotations * SPINS.length;
 
-        for (int i = 0; i < passwordLength; i++) {
-            char symbol = (char) random.nextInt(33, 127);
-            password[i] = symbol;
+        try {
+            for (int i = 0; i < totalSpins; i++) {
+                System.out.print(SPINS[i % SPINS.length]);
+
+                Thread.sleep(100);
+
+                System.out.print("\b");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
-
-        return password;
+        System.out.print("  \r");
     }
 
-    public static void clearPassword(char[] password) {
-        if (password != null) {
-            Arrays.fill(password, '\0');
+    private static void crackPassword(char[] password, boolean weak) {
+        if (password == null || password.length == 0) {
+            System.out.println(RED + CROSS_MARK + "(пустой пароль)" + RESET);
+            return;
         }
+
+        showSpinner();
+        System.out.println((weak ? GREEN + CHECK_MARK : RED + CROSS_MARK) + new String(password) + RESET);
     }
 }
