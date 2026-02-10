@@ -41,8 +41,7 @@ public class PasswordCracker {
         char[] password = new char[passwordLength];
 
         for (int i = 0; i < passwordLength; i++) {
-            char symbol = (char) random.nextInt(33, 127);
-            password[i] = symbol;
+            password[i] = (char) random.nextInt(33, 127);
         }
 
         return password;
@@ -70,12 +69,10 @@ public class PasswordCracker {
         boolean hasUpper = false;
 
         for (char symbol : password) {
-            if (Character.isLetter(symbol)) {
-                if (Character.isLowerCase(symbol)) {
-                    hasLower = true;
-                } else if (Character.isUpperCase(symbol)) {
-                    hasUpper = true;
-                }
+            if (Character.isLowerCase(symbol)) {
+                hasLower = true;
+            } else if (Character.isUpperCase(symbol)) {
+                hasUpper = true;
             } else if (Character.isDigit(symbol)) {
                 hasDigit = true;
             } else {
@@ -126,7 +123,17 @@ public class PasswordCracker {
         return false;
     }
 
-    private static void showSpinner() {
+    private static void crackPassword(char[] password, boolean weak) {
+        if (password == null || password.length == 0) {
+            System.out.println(RED + CROSS_MARK + "(пустой пароль)" + RESET);
+            return;
+        }
+
+        drawSpinner();
+        System.out.println((weak ? GREEN + CHECK_MARK : RED + CROSS_MARK) + new String(password) + RESET);
+    }
+
+    private static void drawSpinner() {
         System.out.print("  Взлом пароля: ");
 
         int totalRotations = 3;
@@ -135,24 +142,12 @@ public class PasswordCracker {
         try {
             for (int i = 0; i < totalSpins; i++) {
                 System.out.print(SPINS[i % SPINS.length]);
-
                 Thread.sleep(100);
-
                 System.out.print("\b");
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
         System.out.print("  \r");
-    }
-
-    private static void crackPassword(char[] password, boolean weak) {
-        if (password == null || password.length == 0) {
-            System.out.println(RED + CROSS_MARK + "(пустой пароль)" + RESET);
-            return;
-        }
-
-        showSpinner();
-        System.out.println((weak ? GREEN + CHECK_MARK : RED + CROSS_MARK) + new String(password) + RESET);
     }
 }
