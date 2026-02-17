@@ -16,8 +16,8 @@ public class PasswordCracker {
     private static final String YELLOW = "\033[33m";
     private static final String URL = "https://nordpass.com/most-common-passwords-list";
 
-    private static final String CHECK_MARK = "✓ Password cracked: ";
-    private static final String CROSS_MARK = "✗ Strong password: ";
+    private static final String CRACKED_MSG = "✓ Password cracked: ";
+    private static final String STRONG_MSG = "✗ Strong password: ";
 
     private static final char[] SPINS = {'-', '\\', '|', '/'};
 
@@ -102,12 +102,18 @@ public class PasswordCracker {
             return true;
         }
 
+        if (!(hasDigit && hasSpecial && hasLetter)) {
+            System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: " +
+                    "Пароль должен содержать буквы (верхнего и нижнего регистра), " +
+                    "цифры и спецсимволы" + RESET);
+            return true;
+        }
+
         if (hasLetter && (!hasLower || !hasUpper)) {
             System.out.println(YELLOW + "  ПРЕДУПРЕЖДЕНИЕ: " +
                     "Пароль не содержит буквы нижнего и верхнего регистров" + RESET);
             return true;
         }
-
         return false;
     }
 
@@ -125,12 +131,12 @@ public class PasswordCracker {
 
     private static void crackPassword(char[] password, boolean weak) {
         if (password == null || password.length == 0) {
-            System.out.println(RED + CROSS_MARK + "(пустой пароль)" + RESET);
+            System.out.println(RED + STRONG_MSG + "(пустой пароль)" + RESET);
             return;
         }
 
         drawSpinner();
-        System.out.println((weak ? GREEN + CHECK_MARK : RED + CROSS_MARK) + new String(password) + RESET);
+        System.out.println((weak ? GREEN + CRACKED_MSG : RED + STRONG_MSG) + new String(password) + RESET);
     }
 
     private static void drawSpinner() {
