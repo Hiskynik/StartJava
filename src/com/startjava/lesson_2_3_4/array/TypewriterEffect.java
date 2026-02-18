@@ -94,7 +94,6 @@ public class TypewriterEffect {
                 if (!currentWord.isEmpty()) {
                     String currentWordStr = currentWord.toString();
                     if (wordIndex >= start && wordIndex <= end) {
-                        // Явно используем метод toUpperCase для выделения
                         printStringWithDelay(toUpperCase(currentWordStr));
                     } else {
                         printStringWithDelay(currentWordStr);
