@@ -62,7 +62,6 @@ public class TypewriterEffect {
         }
     }
 
-    // Метод для преобразования слова в верхний регистр (демонстрационный)
     public static String toUpperCase(String word) {
         return word != null ? word.toUpperCase() : "";
     }
