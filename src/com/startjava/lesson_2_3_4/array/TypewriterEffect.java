@@ -2,50 +2,44 @@ package com.startjava.lesson_2_3_4.array;
 
 public class TypewriterEffect {
     public static void main(String[] args) {
-        String text1 = "Java - это C++, из которого убрали все пистолеты, ножи и дубинки.";
-        WordMetrics wordMetrics1 = findShortestLongestWords(text1);
-        if (wordMetrics1 != null) {
-            toUpperCase(wordMetrics1.shortest);
-            toUpperCase(wordMetrics1.longest);
-        }
-        printQuoteWithAuthor(text1, wordMetrics1, "- James Gosling");
+        String text1 = "Java - это C++, из которого убрали все пистолеты, ножи и дубинки. " +
+                "- James Gosling";
+        String[] words1 = findShortestLongestWords(text1);
 
-        String text2 = "Чтобы написать чистый код, мы сначала пишем грязный код, затем рефакторим его.";
-        WordMetrics wordMetrics2 = findShortestLongestWords(text2);
-        if (wordMetrics2 != null) {
-            toUpperCase(wordMetrics2.shortest);
-            toUpperCase(wordMetrics2.longest);
+        if (words1 != null) {
+            toUpperCase(words1[1]);
+            toUpperCase(words1[2]);
         }
-        printQuoteWithAuthor(text2, wordMetrics2, "- Robert Martin");
 
-        WordMetrics wordMetrics3 = findShortestLongestWords(null);
-        if (wordMetrics3 != null) {
-            toUpperCase(wordMetrics3.shortest);
-            toUpperCase(wordMetrics3.longest);
-        }
-        printQuoteWithAuthor(null, wordMetrics3, null);
+        printTypewriterWithHighlight(text1, words1);
 
-        WordMetrics wordMetrics4 = findShortestLongestWords("");
-        if (wordMetrics4 != null) {
-            toUpperCase(wordMetrics4.shortest);
-            toUpperCase(wordMetrics4.longest);
+        String text2 = "Чтобы написать чистый код, мы сначала пишем грязный код, затем рефакторим его. " +
+                "- Robert Martin";
+        String[] words2 = findShortestLongestWords(text2);
+
+        if (words2 != null) {
+            toUpperCase(words2[1]);
+            toUpperCase(words2[2]);
         }
-        printQuoteWithAuthor("", wordMetrics4, null);
+
+        printTypewriterWithHighlight(text2, words2);
+
+        String[] words3 = findShortestLongestWords(null);
+        if (words3 != null) {
+            toUpperCase(words3[1]);
+            toUpperCase(words3[2]);
+        }
+        printTypewriterWithHighlight(null, words3);
+
+        String[] words4 = findShortestLongestWords("");
+        if (words4 != null) {
+            toUpperCase(words4[1]);
+            toUpperCase(words4[2]);
+        }
+        printTypewriterWithHighlight("", words4);
     }
 
-    public static class WordMetrics {
-        public String[] words;
-        public String shortest;
-        public String longest;
-
-        public WordMetrics(String[] words, String shortest, String longest) {
-            this.words = words;
-            this.shortest = shortest;
-            this.longest = longest;
-        }
-    }
-
-    public static WordMetrics findShortestLongestWords(String text) {
+    public static String[] findShortestLongestWords(String text) {
         if (text == null || text.isBlank()) {
             return null;
         }
@@ -68,7 +62,7 @@ public class TypewriterEffect {
             }
         }
 
-        return new WordMetrics(words, shortest, longest);
+        return new String[]{String.join(" ", words), shortest, longest};
     }
 
     public static String toUpperCase(String word) {
@@ -91,19 +85,6 @@ public class TypewriterEffect {
         return new String(chars);
     }
 
-    private static void printQuoteWithAuthor(String text, WordMetrics metrics, String author) {
-        if (text == null || text.isBlank() || metrics == null) {
-            return;
-        }
-
-        printTypewriterWithHighlight(text, metrics);
-        if (author != null) {
-            System.out.println();
-            printStringWithDelay(author);
-        }
-        System.out.println("\n");
-    }
-
     private static String[] extractWords(String text) {
         if (text == null || text.isBlank()) {
             return new String[0];
@@ -113,7 +94,48 @@ public class TypewriterEffect {
         return cleaned.split("\\s+");
     }
 
-    // Метод для поиска границ выделения
+    private static void printTypewriterWithHighlight(String text, String[] words) {
+        if (text == null || text.isBlank() || words == null) {
+            return;
+        }
+
+        String[] allWords = extractWords(text);
+        int[] bounds = findHighlightBounds(allWords, words[1], words[2]);
+        int start = bounds[0];
+        int end = bounds[1];
+
+        StringBuilder currentWord = new StringBuilder();
+        int wordIndex = 0;
+
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+
+            if (Character.isLetterOrDigit(c)) {
+                currentWord.append(c);
+            } else {
+                if (!currentWord.isEmpty()) {
+                    if (wordIndex >= start && wordIndex <= end) {
+                        printStringWithDelay(toUpperCase(currentWord.toString()));
+                    } else {
+                        printStringWithDelay(currentWord.toString());
+                    }
+                    currentWord = new StringBuilder();
+                    wordIndex++;
+                }
+                printCharWithDelay(c);
+            }
+        }
+
+        if (!currentWord.isEmpty()) {
+            if (wordIndex >= start && wordIndex <= end) {
+                printStringWithDelay(toUpperCase(currentWord.toString()));
+            } else {
+                printStringWithDelay(currentWord.toString());
+            }
+        }
+        System.out.println("\n");
+    }
+
     private static int[] findHighlightBounds(String[] words, String shortest, String longest) {
         int shortestIdx = -1;
         int longestIdx = -1;
@@ -151,46 +173,6 @@ public class TypewriterEffect {
             for (char ch : str.toCharArray()) {
                 printCharWithDelay(ch);
             }
-        }
-    }
-
-    private static void printTypewriterWithHighlight(String text, WordMetrics metrics) {
-        if (text == null || text.isBlank() || metrics == null || metrics.words.length == 0) {
-            return;
-        }
-
-        int[] bounds = findHighlightBounds(metrics.words, metrics.shortest, metrics.longest);
-        int start = bounds[0];
-        int end = bounds[1];
-
-        StringBuilder currentWord = new StringBuilder();
-        int wordIndex = 0;
-
-        for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
-
-            if (Character.isLetterOrDigit(c)) {
-                currentWord.append(c);
-            } else {
-                if (!currentWord.isEmpty()) {
-                    printWordWithHighlight(currentWord.toString(), wordIndex, start, end);
-                    currentWord = new StringBuilder();
-                    wordIndex++;
-                }
-                printCharWithDelay(c);
-            }
-        }
-
-        if (!currentWord.isEmpty()) {
-            printWordWithHighlight(currentWord.toString(), wordIndex, start, end);
-        }
-    }
-
-    private static void printWordWithHighlight(String word, int wordIndex, int start, int end) {
-        if (wordIndex >= start && wordIndex <= end) {
-            printStringWithDelay(toUpperCase(word));
-        } else {
-            printStringWithDelay(word);
         }
     }
 }
