@@ -2,49 +2,51 @@ package com.startjava.lesson_2_3_4.array;
 
 public class TypewriterEffect {
     public static void main(String[] args) {
-        String text1 = "Java - это C++, из которого убрали все пистолеты, ножи и дубинки. " +
+        String inputText1 = "Java - это C++, из которого убрали все пистолеты, ножи и дубинки. " +
                 "- James Gosling";
-        String[] words1 = findShortestLongestWords(text1);
-
+        String[] words1 = findShortestLongestWords(inputText1);
         if (words1 != null) {
-            toUpperCase(words1[1]);
-            toUpperCase(words1[2]);
+            String result1 = convertRangeToUpperCase(inputText1, words1[0], words1[1]);
+            printWithDelay(result1);
+        } else {
+            printWithDelay("Входной текст отсутствует или пуст");
         }
 
-        printTypewriterWithHighlight(text1, words1);
-
-        String text2 = "Чтобы написать чистый код, мы сначала пишем грязный код, затем рефакторим его. " +
-                "- Robert Martin";
-        String[] words2 = findShortestLongestWords(text2);
-
+        String inputText2 = "Чтобы написать чистый код, мы сначала пишем грязный код, затем рефакторим его." +
+                " - Robert Martin";
+        String[] words2 = findShortestLongestWords(inputText2);
         if (words2 != null) {
-            toUpperCase(words2[1]);
-            toUpperCase(words2[2]);
+            String result2 = convertRangeToUpperCase(inputText2, words2[0], words2[1]);
+            printWithDelay(result2);
+        } else {
+            printWithDelay("Входной текст отсутствует или пуст");
         }
 
-        printTypewriterWithHighlight(text2, words2);
-
-        String[] words3 = findShortestLongestWords(null);
+        String inputText3 = null;
+        String[] words3 = findShortestLongestWords(inputText3);
         if (words3 != null) {
-            toUpperCase(words3[1]);
-            toUpperCase(words3[2]);
+            String result3 = convertRangeToUpperCase(inputText3, words3[0], words3[1]);
+            printWithDelay(result3);
+        } else {
+            printWithDelay("Входной текст отсутствует");
         }
-        printTypewriterWithHighlight(null, words3);
 
-        String[] words4 = findShortestLongestWords("");
+        String inputText4 = "";
+        String[] words4 = findShortestLongestWords(inputText4);
         if (words4 != null) {
-            toUpperCase(words4[1]);
-            toUpperCase(words4[2]);
+            String result4 = convertRangeToUpperCase(inputText4, words4[0], words4[1]);
+            printWithDelay(result4);
+        } else {
+            printWithDelay("Входной текст пуст");
         }
-        printTypewriterWithHighlight("", words4);
     }
 
-    public static String[] findShortestLongestWords(String text) {
-        if (text == null || text.isBlank()) {
+    public static String[] findShortestLongestWords(String inputText) {
+        if (inputText == null || inputText.isBlank()) {
             return null;
         }
 
-        String[] words = extractWords(text);
+        String[] words = extractWords(inputText);
 
         if (words.length == 0) {
             return null;
@@ -62,81 +64,63 @@ public class TypewriterEffect {
             }
         }
 
-        return new String[]{String.join(" ", words), shortest, longest};
+        return new String[]{shortest, longest};
     }
 
-    public static String toUpperCase(String word) {
-        if (word == null || word.isEmpty()) {
-            return "";
-        }
-
-        char[] chars = word.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
-
-            if (c >= 'a' && c <= 'z') {
-                chars[i] = (char) (c - 32);
-            } else if (c >= 'а' && c <= 'я') {
-                chars[i] = (char) (c - 32);
-            } else if (c == 'ё') {
-                chars[i] = 'Ё';
-            }
-        }
-        return new String(chars);
-    }
-
-    private static String[] extractWords(String text) {
-        if (text == null || text.isBlank()) {
+    private static String[] extractWords(String inputText) {
+        if (inputText == null || inputText.isBlank()) {
             return new String[0];
         }
 
-        String cleaned = text.replaceAll("[.,!?:;\"'()\\[\\]{}<>-]", " ");
+        String cleaned = inputText.replaceAll("[.,!?:;\"'()\\[\\]{}<>-]", " ");
         return cleaned.split("\\s+");
     }
 
-    private static void printTypewriterWithHighlight(String text, String[] words) {
-        if (text == null || text.isBlank() || words == null) {
-            return;
+    public static String convertRangeToUpperCase(String inputText, String shortest, String longest) {
+        if (inputText == null || inputText.isBlank() || shortest == null || longest == null) {
+            return "";
         }
 
-        String[] allWords = extractWords(text);
-        int[] bounds = findHighlightBounds(allWords, words[1], words[2]);
+        String[] allWords = extractWords(inputText);
+        int[] bounds = findWordIndices(allWords, shortest, longest);
         int start = bounds[0];
         int end = bounds[1];
 
+        StringBuilder result = new StringBuilder();
         StringBuilder currentWord = new StringBuilder();
         int wordIndex = 0;
 
-        for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
+        for (int i = 0; i < inputText.length(); i++) {
+            char c = inputText.charAt(i);
 
             if (Character.isLetterOrDigit(c)) {
                 currentWord.append(c);
             } else {
                 if (!currentWord.isEmpty()) {
                     if (wordIndex >= start && wordIndex <= end) {
-                        printStringWithDelay(toUpperCase(currentWord.toString()));
+                        result.append(currentWord.toString().toUpperCase());
                     } else {
-                        printStringWithDelay(currentWord.toString());
+                        result.append(currentWord);
                     }
                     currentWord = new StringBuilder();
                     wordIndex++;
                 }
-                printCharWithDelay(c);
+                result.append(c);
             }
         }
 
         if (!currentWord.isEmpty()) {
             if (wordIndex >= start && wordIndex <= end) {
-                printStringWithDelay(toUpperCase(currentWord.toString()));
+                result.append(currentWord.toString().toUpperCase());
             } else {
-                printStringWithDelay(currentWord.toString());
+                result.append(currentWord);
             }
         }
-        System.out.println("\n");
+
+        return result.toString();
     }
 
-    private static int[] findHighlightBounds(String[] words, String shortest, String longest) {
+    private static int[] findWordIndices(String[] words, String shortest, String longest) {
         int shortestIdx = -1;
         int longestIdx = -1;
 
@@ -147,7 +131,6 @@ public class TypewriterEffect {
             if (words[i].equalsIgnoreCase(longest) && longestIdx == -1) {
                 longestIdx = i;
             }
-
             if (shortestIdx != -1 && longestIdx != -1) {
                 break;
             }
@@ -155,8 +138,18 @@ public class TypewriterEffect {
 
         int start = Math.min(shortestIdx, longestIdx);
         int end = Math.max(shortestIdx, longestIdx);
-
         return new int[]{start, end};
+    }
+
+    private static void printWithDelay(String inputText) {
+        if (inputText == null || inputText.isBlank()) {
+            return;
+        }
+
+        for (char c : inputText.toCharArray()) {
+            printCharWithDelay(c);
+        }
+        System.out.println("\n");
     }
 
     private static void printCharWithDelay(char c) {
@@ -165,14 +158,6 @@ public class TypewriterEffect {
             Thread.sleep(50);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-        }
-    }
-
-    private static void printStringWithDelay(String str) {
-        if (str != null) {
-            for (char ch : str.toCharArray()) {
-                printCharWithDelay(ch);
-            }
         }
     }
 }
