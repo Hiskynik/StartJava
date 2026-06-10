@@ -6,17 +6,19 @@ public class HangmanGameMain {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        do {
-            String secretWord = HangmanGame.getRandomWord();
-            HangmanGame game = new HangmanGame(secretWord, scanner);
+        String answer = "yes";
+        while (answer.equals("yes")) {
+            HangmanGame game = new HangmanGame(scanner);
             game.start();
 
             System.out.print("\nХотите сыграть еще? (yes/no): ");
-            String answer = scanner.nextLine().trim().toLowerCase();
-            if (answer.equals("no")) {
-                break;
+            answer = scanner.nextLine().trim().toLowerCase();
+
+            while (!answer.equals("yes") && !answer.equals("no")) {
+                System.out.println("Введите корректный ответ [yes / no]:");
+                answer = scanner.nextLine().trim().toLowerCase();
             }
-        } while (true);
+        }
 
         System.out.println("Спасибо за игру! До свидания.");
         scanner.close();

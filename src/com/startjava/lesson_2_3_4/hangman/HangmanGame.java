@@ -24,8 +24,8 @@ public class HangmanGame {
     private final Scanner scanner;
     private final StringBuilder displayMask;
 
-    public HangmanGame(String secretWord, Scanner scanner) {
-        this.secretWord = secretWord.toLowerCase();
+    public HangmanGame(Scanner scanner) {
+        this.secretWord = getRandomWord();
         this.guessed = new boolean[this.secretWord.length()];
         this.mistakeParts = 0;
         this.lettersUsed = new boolean[33];
@@ -34,7 +34,7 @@ public class HangmanGame {
         this.displayMask = new StringBuilder("*".repeat(this.secretWord.length()));
     }
 
-    public static String getRandomWord() {
+    private static String getRandomWord() {
         return WORDS[RANDOM.nextInt(WORDS.length)];
     }
 
@@ -90,15 +90,14 @@ public class HangmanGame {
                 mistakeParts--;
             }
             System.out.println("Буква '" + letter + "' есть в слове! Часть виселицы убрана.");
-            return true;
         } else {
             if (mistakeParts < MAX_PARTS) {
                 mistakeParts++;
                 wrongLetters.append(letter).append(' ');
             }
             System.out.println("Буква '" + letter + "' отсутствует. Часть виселицы добавлена.");
-            return true;
         }
+        return true;
     }
 
     public boolean isGameOver() {
