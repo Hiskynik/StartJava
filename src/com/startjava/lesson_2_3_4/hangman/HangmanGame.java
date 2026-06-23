@@ -17,34 +17,33 @@ public class HangmanGame {
     private static final int MAX_PARTS = GALLOWS.length - 1;
 
     private final String secretWord;
-    private final boolean[] guessed;
     private int mistakeParts;
-    private final boolean[] lettersUsed;
     private final StringBuilder wrongLetters;
+    private final StringBuilder usedLetters;
     private final Scanner scanner;
     private final StringBuilder mask;
 
     public HangmanGame(Scanner scanner) {
         this.secretWord = WORDS[RANDOM.nextInt(WORDS.length)];
-        this.guessed = new boolean[secretWord.length()];
         this.mistakeParts = 0;
-        this.lettersUsed = new boolean[33];
         this.wrongLetters = new StringBuilder();
+        this.usedLetters = new StringBuilder();
         this.scanner = scanner;
         this.mask = new StringBuilder("*".repeat(secretWord.length()));
     }
 
     public void start() {
         printWelcome();
-        while (!isGameOver()) {
+        while (true) {
             printGameState();
             char letter = readLetter();
             guess(letter);
+
             if (isWin()) {
                 printWin();
                 break;
             }
-            if (isGameOver()) {
+            if (mistakeParts >= MAX_PARTS) {
                 printLoss();
                 break;
             }
@@ -61,45 +60,35 @@ public class HangmanGame {
                 %n""", secretWord.length(), MAX_PARTS);
     }
 
-    public boolean isGameOver() {
-        return isWin() || mistakeParts >= MAX_PARTS;
-    }
-
-    public boolean isWin() {
-        for (boolean b : guessed) {
-            if (!b) return false;
-        }
-        return true;
-    }
-
-    public String getHangmanPicture() {
-        int linesToShow = mistakeParts + 1;
-        if (linesToShow > GALLOWS.length) {
-            linesToShow = GALLOWS.length;
-        }
-        StringBuilder picture = new StringBuilder();
-        for (int i = 0; i < linesToShow; i++) {
-            picture.append(GALLOWS[i]);
-            if (i < linesToShow - 1) {
-                picture.append("\n");
-            }
-        }
-        return picture.toString();
-    }
-
-    public String getWrongLetters() {
-        return wrongLetters.isEmpty() ? "нет" : wrongLetters.toString().trim();
-    }
-
-    public int getRemainingAttempts() {
-        return MAX_PARTS - mistakeParts;
+    private boolean isWin() {
+        return mask.indexOf("*") == -1;
     }
 
     private void printGameState() {
         System.out.println(getHangmanPicture());
-        System.out.println("Слово: " + mask.toString());
+        System.out.println("Слово: " + mask);
         System.out.println("Ошибочные буквы: " + getWrongLetters());
         System.out.println("Осталось попыток: " + getRemainingAttempts());
+    }
+
+    private String getHangmanPicture() {
+        int linesToShow = mistakeParts + 1;
+        if (linesToShow > GALLOWS.length) {
+            linesToShow = GALLOWS.length;
+        }
+        StringBuilder gallows = new StringBuilder();
+        for (int i = 0; i < linesToShow; i++) {
+            gallows.append(GALLOWS[i]).append("\n");
+        }
+        return gallows.toString();
+    }
+
+    private String getWrongLetters() {
+        return wrongLetters.isEmpty() ? "нет" : wrongLetters.toString();
+    }
+
+    private int getRemainingAttempts() {
+        return MAX_PARTS - mistakeParts;
     }
 
     private char readLetter() {
@@ -112,17 +101,15 @@ public class HangmanGame {
                 continue;
             }
 
-            char letter = input.charAt(0);
-            int idx = getRussianLetterIndex(letter);
+            char letter = Character.toLowerCase(input.charAt(0));
 
-            if (idx == -1) {
+            if ("абвгдеёжзийклмнопрстуфхцчшщъыьэюя".indexOf(letter) == -1) {
                 System.out.println("Введите кириллическую букву.");
                 continue;
             }
 
-            letter = Character.toLowerCase(letter);
-            if (lettersUsed[idx]) {
-                if (secretWord.indexOf(letter) != -1) {
+            if (usedLetters.indexOf(String.valueOf(letter)) != -1) {
+                if (mask.indexOf(String.valueOf(Character.toUpperCase(letter))) != -1) {
                     System.out.println("Буква '" + letter + "' уже была угадана. Попробуйте другую.");
                 } else {
                     System.out.println("Буква '" + letter + "' уже была введена " +
@@ -130,53 +117,42 @@ public class HangmanGame {
                 }
                 continue;
             }
-
             return letter;
         }
     }
 
     private void guess(char letter) {
-        markLetterUsed(letter);
         if (secretWord.indexOf(letter) != -1) {
             markLetterAsCorrect(letter);
         } else {
             markLetterAsWrong(letter);
         }
-    }
-
-    private void markLetterUsed(char letter) {
-        lettersUsed[getRussianLetterIndex(letter)] = true;
+        usedLetters.append(letter);
     }
 
     private void markLetterAsCorrect(char letter) {
         for (int i = 0; i < secretWord.length(); i++) {
             if (secretWord.charAt(i) == letter) {
-                guessed[i] = true;
                 mask.setCharAt(i, Character.toUpperCase(letter));
             }
         }
         if (mistakeParts > 0) {
             mistakeParts--;
+            System.out.println("Буква '" + letter + "' есть в слове! Часть виселицы убрана.");
+        } else {
+            System.out.println("Буква '" + letter + "' есть в слове!");
         }
-        System.out.println("Буква '" + letter + "' есть в слове! Часть виселицы убрана.");
     }
 
     private void markLetterAsWrong(char letter) {
         if (mistakeParts < MAX_PARTS) {
             mistakeParts++;
-            wrongLetters.append(letter).append(' ');
+            if (!wrongLetters.isEmpty()) {
+                wrongLetters.append(' ');
+            }
+            wrongLetters.append(letter);
         }
         System.out.println("Буква '" + letter + "' отсутствует. Часть виселицы добавлена.");
-    }
-
-    private int getRussianLetterIndex(char c) {
-        c = Character.toLowerCase(c);
-        if (!String.valueOf(c).matches("[а-яё]")) {
-            return -1;
-        }
-        if (c == 'ё') return 6;
-        if (c > 'е') return c - 'а' - 1;
-        return c - 'а';
     }
 
     private void printWin() {

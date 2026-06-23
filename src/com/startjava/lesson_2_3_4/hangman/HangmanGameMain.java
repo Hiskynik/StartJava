@@ -5,19 +5,16 @@ import java.util.Scanner;
 public class HangmanGameMain {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
         String answer = "yes";
-        while (true) {
+
+        while (!answer.equals("no")) {
             if (answer.equals("yes")) {
                 HangmanGame game = new HangmanGame(scanner);
                 game.start();
             }
             System.out.print("\nХотите сыграть еще? (yes/no): ");
             answer = scanner.nextLine().trim().toLowerCase();
-
-            if (answer.equals("no")) {
-                break;
-            } else if (!answer.equals("yes")) {
+            if (!answer.equals("yes") && !answer.equals("no")) {
                 System.out.println("Введите корректный ответ [yes / no]:");
             }
         }
