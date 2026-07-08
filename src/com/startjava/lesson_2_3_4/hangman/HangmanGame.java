@@ -40,11 +40,13 @@ public class HangmanGame {
             guess(letter);
 
             if (isWin()) {
-                printWin();
+                printGameState();
+                printGameResult(true);
                 break;
             }
             if (mistakeParts >= MAX_PARTS) {
-                printLoss();
+                printGameState();
+                printGameResult(false);
                 break;
             }
         }
@@ -61,7 +63,7 @@ public class HangmanGame {
     }
 
     private boolean isWin() {
-        return mask.indexOf("*") == -1;
+        return mask.toString().equals(secretWord.toUpperCase());
     }
 
     private void printGameState() {
@@ -94,27 +96,22 @@ public class HangmanGame {
     private char readLetter() {
         while (true) {
             System.out.print("Введите букву: ");
-            String input = scanner.nextLine().trim();
+            String input = scanner.nextLine().trim().toLowerCase();
 
             if (input.length() != 1) {
                 System.out.println("Пожалуйста, введите одну букву.");
                 continue;
             }
 
-            char letter = Character.toLowerCase(input.charAt(0));
+            char letter = input.charAt(0);
 
-            if ("абвгдеёжзийклмнопрстуфхцчшщъыьэюя".indexOf(letter) == -1) {
+            if (!input.matches("[а-яё]")) {
                 System.out.println("Введите кириллическую букву.");
                 continue;
             }
 
             if (usedLetters.indexOf(String.valueOf(letter)) != -1) {
-                if (mask.indexOf(String.valueOf(Character.toUpperCase(letter))) != -1) {
-                    System.out.println("Буква '" + letter + "' уже была угадана. Попробуйте другую.");
-                } else {
-                    System.out.println("Буква '" + letter + "' уже была введена " +
-                            "и отсутствует в слове. Попробуйте другую.");
-                }
+                System.out.println("Буква '" + letter + "' уже вводилась. Попробуйте другую.");
                 continue;
             }
             return letter;
@@ -155,12 +152,13 @@ public class HangmanGame {
         System.out.println("Буква '" + letter + "' отсутствует. Часть виселицы добавлена.");
     }
 
-    private void printWin() {
-        System.out.println("\nПоздравляем! Вы угадали слово: " + secretWord);
-    }
-
-    private void printLoss() {
-        System.out.println("\nВы проиграли! Виселица полностью нарисована.");
-        System.out.println("Загаданное слово было: " + secretWord);
+    private void printGameResult(boolean won) {
+        System.out.println();
+        if (won) {
+            System.out.println("Поздравляем! Вы угадали слово: " + secretWord);
+        } else {
+            System.out.println("Вы проиграли! Виселица полностью нарисована.");
+            System.out.println("Загаданное слово было: " + secretWord);
+        }
     }
 }
